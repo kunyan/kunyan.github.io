@@ -1,0 +1,50 @@
+---
+import { defaultLang } from '../i18n/config';
+import { t } from '../i18n/ui';
+
+// Use the default language for the 404 page since we don't know which lang the visitor wanted.
+const lang = defaultLang;
+---
+
+<!doctype html>
+<html lang={lang}>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>{t(lang, '404.title')} · {t(lang, 'meta.siteName')}</title>
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <meta name="robots" content="noindex" />
+    <script is:inline>
+      (function () {
+        try {
+          var saved = localStorage.getItem('theme');
+          var theme = saved === 'light' || saved === 'dark' ? saved : 'system';
+          var prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+          var dark = theme === 'dark' || (theme === 'system' && prefersDark);
+          if (dark) document.documentElement.classList.add('dark');
+        } catch (e) {}
+      })();
+    </script>
+  </head>
+  <body class="bg-background text-foreground">
+    <main class="flex min-h-screen flex-col items-center justify-center px-6 text-center">
+      <p class="font-mono text-sm uppercase tracking-wider text-muted-foreground">404</p>
+      <h1 class="mt-4 text-balance text-3xl font-semibold tracking-tight sm:text-4xl">
+        {t(lang, '404.title')}
+      </h1>
+      <p class="mt-3 max-w-md text-balance text-base text-muted-foreground">
+        {t(lang, '404.hint')}
+      </p>
+      <a
+        href={`/${defaultLang}/`}
+        class="mt-8 inline-flex h-10 items-center justify-center rounded-md bg-primary px-5 text-sm font-medium text-primary-foreground transition-colors hover:bg-primary/90"
+      >
+        {t(lang, '404.cta')}
+      </a>
+    </main>
+  </body>
+</html>
+
+<style>
+  @import "../styles/global.css";
+</style>

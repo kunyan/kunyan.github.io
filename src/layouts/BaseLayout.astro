@@ -1,0 +1,68 @@
+---
+import '../styles/global.css';
+import Nav from '../components/Nav.astro';
+import Footer from '../components/Footer.astro';
+import { defaultLang, languageMeta, type Lang } from '../i18n/config';
+import { t } from '../i18n/ui';
+import { localizedPath } from '../i18n/utils';
+
+interface Props {
+  lang: Lang;
+  title?: string;
+  description?: string;
+  /** Slug of the corresponding page in the other language, for the language switcher. Pass null to indicate no counterpart. */
+  counterpartPath?: string | null;
+}
+
+const { lang = defaultLang, counterpartPath } = Astro.props;
+const title = Astro.props.title ?? `${t(lang, 'meta.siteName')} — ${t(lang, 'meta.tagline')}`;
+const description = Astro.props.description ?? t(lang, 'meta.description');
+
+const htmlLang = languageMeta[lang].htmlLang;
+---
+
+<!doctype html>
+<html lang={htmlLang}>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="generator" content={Astro.generator} />
+    <title>{title}</title>
+    <meta name="description" content={description} />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <link rel="alternate" type="application/rss+xml" title={t(lang, 'meta.siteName')} href={localizedPath(lang, '/rss.xml')} />
+    <link rel="alternate" hreflang="en" href={`https://yankun.org/en/`} />
+    <link rel="alternate" hreflang="zh-Hans" href={`https://yankun.org/zh/`} />
+    <!-- Google tag (gtag.js) -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-68VX7ENXYE"></script>
+    <script is:inline>
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag('js', new Date());
+
+      gtag('config', 'G-68VX7ENXYE');
+    </script>
+
+    <!-- Set theme BEFORE first paint to avoid flash -->
+    <script is:inline>
+      (function () {
+        try {
+          var saved = localStorage.getItem('theme'); // 'light' | 'dark' | 'system' | null
+          var theme = saved === 'light' || saved === 'dark' ? saved : 'system';
+          var prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+          var dark = theme === 'dark' || (theme === 'system' && prefersDark);
+          if (dark) document.documentElement.classList.add('dark');
+        } catch (e) {}
+      })();
+    </script>
+  </head>
+  <body>
+    <div class="flex min-h-screen flex-col">
+      <Nav lang={lang} counterpartPath={counterpartPath ?? null} />
+      <main class="flex-1 pt-14">
+        <slot />
+      </main>
+      <Footer lang={lang} />
+    </div>
+  </body>
+</html>

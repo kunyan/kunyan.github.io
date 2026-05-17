@@ -1,0 +1,44 @@
+---
+import { t } from '../i18n/ui';
+import { localizedPath } from '../i18n/utils';
+import type { Lang } from '../i18n/config';
+
+interface Props {
+  lang: Lang;
+}
+
+const { lang } = Astro.props;
+const year = new Date().getFullYear();
+---
+
+<footer class="mt-24 border-t border-border">
+  <div
+    class="container flex h-16 flex-col items-center justify-between gap-2 sm:flex-row"
+  >
+    <p class="text-xs text-muted-foreground">
+      © {year} {t(lang, 'meta.siteName')}. {t(lang, 'footer.tagline')}
+    </p>
+    <div class="flex items-center gap-4 text-xs">
+      <a
+        class="text-muted-foreground transition-colors hover:text-foreground"
+        href={localizedPath(lang, '/rss.xml')}
+      >
+        {t(lang, 'footer.rss')}
+      </a>
+      <a
+        class="text-muted-foreground transition-colors hover:text-foreground"
+        href="https://github.com/kunyan"
+        target="_blank"
+        rel="noopener noreferrer"
+      >
+        {t(lang, 'footer.github')}
+      </a>
+      <a
+        class="text-muted-foreground transition-colors hover:text-foreground"
+        href="https://www.strava.com/athletes/103966576"
+      >
+        {t(lang, 'footer.strava')}
+      </a>
+    </div>
+  </div>
+</footer>

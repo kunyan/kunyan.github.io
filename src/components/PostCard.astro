@@ -1,0 +1,60 @@
+---
+import { formatDate, getReadingTime, postHref, type PostEntry } from '../i18n/utils';
+import { t } from '../i18n/ui';
+import type { Lang } from '../i18n/config';
+
+interface Props {
+  post: PostEntry;
+  lang: Lang;
+}
+
+const { post, lang } = Astro.props;
+const href = postHref(post);
+---
+
+<a
+  href={href}
+  class="group block focus-visible:outline-none"
+  aria-label={post.data.title}
+>
+  <article class="flex h-full flex-col">
+    <div
+      class="relative aspect-[16/10] w-full overflow-hidden rounded-lg border border-border bg-muted"
+    >
+      <img
+        src={post.data.cover}
+        alt=""
+        loading="lazy"
+        class="h-full w-full object-cover transition-transform duration-500 ease-out lg:group-hover:scale-105"
+      />
+    </div>
+
+    <div class="mt-4 flex flex-1 flex-col">
+      <h3 class="text-base font-semibold tracking-tight text-foreground">
+        {post.data.title}
+      </h3>
+      <p
+        class="mt-2 text-sm leading-relaxed text-muted-foreground"
+        style="display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden"
+      >
+        {post.data.excerpt}
+      </p>
+
+      <div
+        class="mt-4 flex flex-wrap items-center gap-x-2 gap-y-1 text-xs text-muted-foreground"
+      >
+        <span>{formatDate(post.data.date, lang)}</span>
+        <span aria-hidden="true">·</span>
+        <span>{getReadingTime(post)} {t(lang, 'posts.readSuffix')}</span>
+        <span aria-hidden="true">·</span>
+        <span class="flex flex-wrap gap-1.5">
+          {
+            post.data.tags.map((tag) => (
+              <span class="text-foreground/80">#{tag}</span>
+            ))
+          }
+        </span>
+      </div>
+    </div>
+  </article>
+</a>

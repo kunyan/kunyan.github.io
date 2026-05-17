@@ -1,0 +1,47 @@
+---
+import { languages, defaultLang } from '../i18n/config';
+const langsJson = JSON.stringify(languages);
+const defJson = JSON.stringify(defaultLang);
+---
+
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Kun's Notes</title>
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <meta name="robots" content="noindex" />
+    <!-- Fallback: if JS is disabled, send everyone to the default-language home -->
+    <meta http-equiv="refresh" content={`0; url=/${defaultLang}/`} />
+    <link rel="canonical" href={`/${defaultLang}/`} />
+    <script is:inline define:vars={{ langs: languages, def: defaultLang }}>
+      (function () {
+        try {
+          var saved = localStorage.getItem('preferredLang');
+          var chosen = langs.indexOf(saved) >= 0 ? saved : null;
+
+          if (!chosen) {
+            var list = navigator.languages && navigator.languages.length
+              ? navigator.languages
+              : [navigator.language || ''];
+            for (var i = 0; i < list.length && !chosen; i++) {
+              var tag = String(list[i]).toLowerCase();
+              for (var j = 0; j < langs.length && !chosen; j++) {
+                if (tag === langs[j] || tag.indexOf(langs[j] + '-') === 0) {
+                  chosen = langs[j];
+                }
+              }
+            }
+            if (!chosen) chosen = def;
+            try { localStorage.setItem('preferredLang', chosen); } catch (e) {}
+          }
+          window.location.replace('/' + chosen + '/');
+        } catch (e) {
+          window.location.replace('/' + def + '/');
+        }
+      })();
+    </script>
+  </head>
+  <body></body>
+</html>

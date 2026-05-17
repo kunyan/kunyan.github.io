@@ -1,0 +1,170 @@
+---
+import type { GetStaticPaths } from 'astro';
+import { getCollection, render } from 'astro:content';
+import BaseLayout from '../../../layouts/BaseLayout.astro';
+import Toc from '../../../components/react/Toc.tsx';
+import BackToTop from '../../../components/react/BackToTop.tsx';
+import Comments from '../../../components/react/Comments.tsx';
+import { Icon } from 'astro-icon/components';
+import { languages, type Lang, isLang } from '../../../i18n/config';
+import { t } from '../../../i18n/ui';
+import {
+  formatDate,
+  getCounterpart,
+  getPostsByLang,
+  getReadingTime,
+  postHref,
+  postLang,
+  postSlug,
+  type PostEntry,
+} from '../../../i18n/utils';
+
+export const getStaticPaths = (async () => {
+  const posts = await getCollection('posts', ({ data }) => !data.draft);
+  return posts.map((post) => ({
+    params: { lang: postLang(post), slug: postSlug(post) },
+    props: { post },
+  }));
+}) satisfies GetStaticPaths;
+
+interface PageProps {
+  post: PostEntry;
+}
+
+const { post } = Astro.props as PageProps;
+const lang = Astro.params.lang;
+if (!isLang(lang)) throw new Error(`Invalid lang param: ${lang}`);
+
+const { Content, headings } = await render(post);
+const coverUrl = post.data.cover;
+
+const sameLangPosts = await getPostsByLang(lang);
+const idx = sameLangPosts.findIndex((p) => p.id === post.id);
+const prev = idx > 0 ? sameLangPosts[idx - 1] : null;
+const next = idx >= 0 && idx < sameLangPosts.length - 1 ? sameLangPosts[idx + 1] : null;
+
+const otherLang: Lang = languages.find((l) => l !== lang) ?? lang;
+const counterpart = await getCounterpart(post, otherLang);
+const counterpartPath = counterpart ? postHref(counterpart) : null;
+
+const pageTitle = `${post.data.title} · ${t(lang, 'meta.siteName')}`;
+---
+
+<BaseLayout
+  lang={lang}
+  title={pageTitle}
+  description={post.data.excerpt}
+  counterpartPath={counterpartPath}
+>
+  <article class="mx-auto w-full max-w-[1400px] px-6 pt-12 pb-24 lg:px-10">
+    <div class="lg:grid lg:grid-cols-[minmax(0,1fr)_240px] lg:gap-12 xl:grid-cols-[minmax(0,1fr)_260px] xl:gap-16">
+      <div class="mx-auto w-full max-w-[70ch] lg:mx-0 lg:max-w-none">
+        <a
+          href={`/${lang}/posts/`}
+          class="mb-8 inline-flex items-center gap-1.5 text-sm text-muted-foreground transition-colors hover:text-foreground"
+        >
+          <Icon name="lucide:arrow-left" width={14} height={14} />
+          {t(lang, 'post.backToAll')}
+        </a>
+
+        <h1 class="text-balance text-4xl font-semibold leading-[1.1] tracking-tight sm:text-5xl">
+          {post.data.title}
+        </h1>
+
+        <div class="mt-6 flex flex-wrap items-center gap-x-3 gap-y-2 text-sm text-muted-foreground">
+          <span class="inline-flex items-center gap-1.5">
+            <Icon name="lucide:calendar" width={14} height={14} />
+            {formatDate(post.data.date, lang)}
+          </span>
+          <span aria-hidden="true">·</span>
+          <span class="inline-flex items-center gap-1.5">
+            <Icon name="lucide:clock" width={14} height={14} />
+            {getReadingTime(post)} {t(lang, 'posts.readSuffix')}
+          </span>
+          <span aria-hidden="true">·</span>
+          <span class="flex flex-wrap gap-1.5">
+            {
+              post.data.tags.map((tag) => (
+                <span class="inline-flex items-center rounded-md bg-secondary px-2 py-0.5 text-xs font-medium text-secondary-foreground">
+                  {tag}
+                </span>
+              ))
+            }
+          </span>
+        </div>
+
+        <div class="mt-10 aspect-[16/8] w-full overflow-hidden rounded-lg border border-border bg-muted">
+          <img src={coverUrl} alt="" class="h-full w-full object-cover" />
+        </div>
+
+        <p class="mt-10 text-balance text-xl leading-relaxed text-muted-foreground">
+          {post.data.excerpt}
+        </p>
+
+        <hr class="my-10 border-border" />
+
+        <div class="prose-blog">
+          <Content />
+        </div>
+
+        <nav class="mt-20 grid grid-cols-1 gap-4 border-t border-border pt-10 sm:grid-cols-2">
+          {
+            prev ? (
+              <a
+                href={postHref(prev)}
+                class="group flex flex-col gap-1 rounded-lg border border-border p-4 transition-colors hover:bg-accent"
+              >
+                <span class="inline-flex items-center gap-1 text-xs text-muted-foreground">
+                  <Icon name="lucide:arrow-left" width={12} height={12} />
+                  {t(lang, 'post.previous')}
+                </span>
+                <span class="line-clamp-2 text-sm font-medium tracking-tight">
+                  {prev.data.title}
+                </span>
+              </a>
+            ) : (
+              <span />
+            )
+          }
+          {
+            next ? (
+              <a
+                href={postHref(next)}
+                class="group flex flex-col gap-1 rounded-lg border border-border p-4 text-right transition-colors hover:bg-accent"
+              >
+                <span class="inline-flex items-center justify-end gap-1 text-xs text-muted-foreground">
+                  {t(lang, 'post.next')}
+                  <Icon name="lucide:arrow-right" width={12} height={12} />
+                </span>
+                <span class="line-clamp-2 text-sm font-medium tracking-tight">
+                  {next.data.title}
+                </span>
+              </a>
+            ) : (
+              <span />
+            )
+          }
+        </nav>
+
+        {
+          post.data.comments !== false && (
+            <section class="mt-20 border-t border-border pt-10">
+              <h2 class="mb-6 text-base font-semibold tracking-tight">
+                {t(lang, 'post.comments')}
+              </h2>
+              <Comments client:visible lang={lang} />
+            </section>
+          )
+        }
+      </div>
+
+      <aside class="hidden lg:block">
+        <div class="sticky top-24">
+          <Toc client:load headings={headings} label={t(lang, 'post.toc')} />
+        </div>
+      </aside>
+    </div>
+  </article>
+
+  <BackToTop client:load label={t(lang, 'post.backToTop')} />
+</BaseLayout>

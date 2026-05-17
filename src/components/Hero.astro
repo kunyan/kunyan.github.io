@@ -1,0 +1,67 @@
+---
+import { heroTitleSegments, heroTitleBreakAfter, t } from '../i18n/ui';
+import { defaultLang, type Lang } from '../i18n/config';
+
+interface Props {
+  lang: Lang;
+  newestTitle?: string;
+}
+
+const { lang = defaultLang, newestTitle } = Astro.props;
+
+const segments = heroTitleSegments[lang];
+const breakAfter = heroTitleBreakAfter[lang];
+
+const WORD_BASE_DELAY = 200;
+const WORD_STEP = 55;
+const subtitleDelay = WORD_BASE_DELAY + segments.length * WORD_STEP;
+const newPostLabel = t(lang, 'hero.newPost');
+const subtitle = t(lang, 'hero.subtitle');
+---
+
+<section class="relative overflow-hidden">
+  <div class="absolute inset-0 hero-grid" aria-hidden="true"></div>
+  <div
+    class="container relative flex flex-col items-center py-28 text-center sm:py-36 lg:py-44"
+  >
+    {
+      newestTitle && (
+        <span
+          class="mb-6 inline-flex animate-fade-in items-center gap-2 rounded-full border border-border bg-background/60 px-3 py-1 text-xs text-muted-foreground backdrop-blur"
+          style="animation-delay: 0ms"
+        >
+          <span class="relative flex h-1.5 w-1.5">
+            <span class="absolute inline-flex h-full w-full animate-ping rounded-full bg-emerald-500 opacity-75" />
+            <span class="relative inline-flex h-1.5 w-1.5 rounded-full bg-emerald-500" />
+          </span>
+          <span class="max-w-[60vw] truncate sm:max-w-none">
+            {newPostLabel} · {newestTitle}
+          </span>
+        </span>
+      )
+    }
+    <h1
+      class="max-w-3xl text-balance text-4xl font-semibold tracking-tight sm:text-5xl lg:text-6xl"
+    >
+      {
+        segments.map((word, i) => (
+          <>
+            <span
+              class="inline-block animate-fade-in"
+              style={`animation-delay: ${WORD_BASE_DELAY + i * WORD_STEP}ms`}
+            >
+              {word}
+            </span>
+            {i === breakAfter - 1 ? <br class="hidden sm:block" /> : ' '}
+          </>
+        ))
+      }
+    </h1>
+    <p
+      class="mt-6 max-w-xl animate-fade-in text-balance text-base text-muted-foreground sm:text-lg"
+      style={`animation-delay: ${subtitleDelay}ms`}
+    >
+      {subtitle}
+    </p>
+  </div>
+</section>

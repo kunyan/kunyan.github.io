@@ -1,0 +1,11 @@
+# Git hooks managed by lefthook. Install once with `pnpm lefthook install`.
+# Auto-formats staged files via Biome and re-stages the fixes so the commit
+# captures the formatted output. .astro / .md / .mdx are skipped — Biome's
+# Astro support is still rough, and we don't want post content reformatted.
+pre-commit:
+  parallel: true
+  jobs:
+    - name: biome
+      glob: "*.{ts,tsx,js,jsx,json,jsonc,css}"
+      run: pnpm exec biome check --write --no-errors-on-unmatched {staged_files}
+      stage_fixed: true

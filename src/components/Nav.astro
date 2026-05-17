@@ -1,0 +1,144 @@
+---
+import { Icon } from 'astro-icon/components';
+import ThemeToggle from './react/ThemeToggle.tsx';
+import MobileMenu from './react/MobileMenu.tsx';
+import LanguageSwitcher, { type LangOption } from './react/LanguageSwitcher.tsx';
+import { t } from '../i18n/ui';
+import { localizedPath } from '../i18n/utils';
+import { languages, languageMeta, type Lang } from '../i18n/config';
+
+interface Props {
+  lang: Lang;
+  /** Path of the same page in the other language, e.g. "/zh/posts/foo/". null if no translation. */
+  counterpartPath: string | null;
+}
+
+const { lang, counterpartPath } = Astro.props;
+const pathname = Astro.url.pathname.replace(/\/$/, '') || '/';
+
+const links = [
+  { label: t(lang, 'nav.home'), href: localizedPath(lang, '/') },
+  { label: t(lang, 'nav.posts'), href: localizedPath(lang, '/posts/') },
+  { label: t(lang, 'nav.about'), href: localizedPath(lang, '/about/') },
+];
+
+function isActive(href: string) {
+  const target = href.replace(/\/$/, '') || '/';
+  if (target === localizedPath(lang, '/').replace(/\/$/, '')) {
+    return pathname === target;
+  }
+  return pathname === target || pathname.startsWith(target + '/');
+}
+
+const themeLabels = {
+  toggle: t(lang, 'theme.toggle'),
+  light: t(lang, 'theme.light'),
+  dark: t(lang, 'theme.dark'),
+  system: t(lang, 'theme.system'),
+};
+
+const menuLabels = {
+  open: t(lang, 'nav.openMenu'),
+  close: t(lang, 'nav.closeMenu'),
+};
+
+// Build language menu options. For the current language: stay put.
+// For another language: use the counterpart URL if it exists, else fall back to that language's homepage.
+const langOptions: LangOption[] = languages.map((l) => {
+  const meta = languageMeta[l];
+  let href: string;
+  if (l === lang) {
+    href = pathname;
+  } else if (counterpartPath) {
+    href = counterpartPath;
+  } else {
+    href = localizedPath(l, '/');
+  }
+  return { code: l, label: meta.name, short: meta.short, href };
+});
+---
+
+<header
+  id="site-nav"
+  class="fixed inset-x-0 top-0 z-50 border-b border-transparent bg-background/0 transition-all duration-200"
+  data-scrolled-class="border-border bg-background/80 backdrop-blur-md supports-[backdrop-filter]:bg-background/60"
+>
+  <div class="container flex h-14 items-center">
+    <a
+      href={localizedPath(lang, '/')}
+      class="flex items-center gap-2 text-sm font-semibold tracking-tight focus-visible:outline-none"
+    >
+      <span
+        class="inline-flex h-7 w-7 items-center justify-center rounded-md bg-foreground text-background"
+      >
+        <Icon name="lucide:terminal" width={15} height={15} stroke-width={2} />
+      </span>
+      <span>{t(lang, 'meta.siteName')}</span>
+    </a>
+
+    <nav class="ml-8 hidden flex-1 items-center gap-1 lg:flex">
+      {
+        links.map((l) => (
+          <a
+            href={l.href}
+            class:list={[
+              'rounded-md px-3 py-1.5 text-sm transition-colors',
+              isActive(l.href)
+                ? 'text-foreground'
+                : 'text-muted-foreground hover:text-foreground',
+            ]}
+          >
+            {l.label}
+          </a>
+        ))
+      }
+    </nav>
+
+    <div class="ml-auto flex items-center gap-1">
+      <ThemeToggle client:load labels={themeLabels} />
+      <LanguageSwitcher
+        client:load
+        current={lang}
+        options={langOptions}
+        toggleLabel={t(lang, 'nav.switchLanguage')}
+      />
+      
+      <a
+        href="https://github.com/kunyan"
+        target="_blank"
+        rel="noopener noreferrer"
+        aria-label={t(lang, 'nav.github')}
+        class="inline-flex h-10 w-10 items-center justify-center rounded-md text-muted-foreground transition-colors hover:bg-accent hover:text-accent-foreground lg:h-9 lg:w-9"
+      >
+        <Icon name="lucide:github" width={16} height={16} />
+      </a>
+      <a
+        href={localizedPath(lang, '/rss.xml')}
+        aria-label={t(lang, 'nav.rss')}
+        class="inline-flex h-10 w-10 items-center justify-center rounded-md text-muted-foreground transition-colors hover:bg-accent hover:text-accent-foreground lg:h-9 lg:w-9"
+      >
+        <Icon name="lucide:rss" width={16} height={16} />
+      </a>
+      <MobileMenu client:load links={links} pathname={pathname} labels={menuLabels} />
+    </div>
+  </div>
+</header>
+
+<script>
+  const nav = document.getElementById('site-nav');
+  if (nav) {
+    const scrolledClass = nav.dataset.scrolledClass!.split(/\s+/);
+    const transparentClass = 'border-transparent';
+    const onScroll = () => {
+      if (window.scrollY > 8) {
+        nav.classList.add(...scrolledClass);
+        nav.classList.remove(transparentClass);
+      } else {
+        nav.classList.remove(...scrolledClass);
+        nav.classList.add(transparentClass);
+      }
+    };
+    onScroll();
+    window.addEventListener('scroll', onScroll, { passive: true });
+  }
+</script>
