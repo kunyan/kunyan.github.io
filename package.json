@@ -10,6 +10,7 @@
     "type": "git",
     "url": "git@github.com:kunyan/kunyan.github.io.git"
   },
+  "packageManager": "pnpm@11.1.1",
   "scripts": {
     "dev": "astro dev",
     "build": "astro build",
