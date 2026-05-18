@@ -1,0 +1,33 @@
+---
+import { Image } from "astro:assets";
+import type { CollectionEntry } from "astro:content";
+import { resolveGalleryImage } from "../../lib/photos";
+
+interface Props {
+  photo: CollectionEntry<"gallery">;
+}
+
+const { photo } = Astro.props;
+const image = resolveGalleryImage(photo.data.image);
+const ar = image.width / image.height;
+const tagsAttr = photo.data.tags.join(" ");
+---
+
+<button
+  type="button"
+  class="gallery-item group block overflow-hidden rounded-md bg-muted focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
+  data-slug={photo.id}
+  data-tags={tagsAttr}
+  style={`--ar: ${ar}`}
+  aria-label={photo.data.title}
+>
+  <Image
+    src={image}
+    alt={photo.data.title}
+    widths={[400, 800, 1200]}
+    sizes="(min-width: 1280px) 33vw, (min-width: 640px) 50vw, 100vw"
+    loading="lazy"
+    decoding="async"
+    class="h-full w-full object-cover transition-transform duration-500 ease-out group-hover:scale-[1.02]"
+  />
+</button>
