@@ -305,3 +305,57 @@ body {
   outline-offset: 2px;
   border-radius: 2px;
 }
+
+
+@layer components {
+    /* section title — gray uppercase eyebrow + zh title + flex divider */
+    .h-section {
+        @apply flex items-baseline mb-5 mt-0 text-[11px] font-semibold uppercase
+    tracking-[0.14em] text-zinc-500
+    after:content-[''] after:flex-1 after:h-px after:bg-zinc-200;
+    }
+    .h-section > .zh {
+        @apply text-[16px] font-semibold text-zinc-950 normal-case
+    tracking-[-0.01em] mr-1;
+    }
+
+    /* dot separator */
+    .sep {
+        @apply inline-block w-0.75 h-0.75 rounded-full bg-zinc-300
+    align-[3px] mx-2;
+    }
+
+    /* timeline role — connector line + dot */
+    .role {
+        @apply relative pt-1.5 pb-3.5
+    before:content-[''] before:absolute before:-left-5.5 before:top-3.25
+    before:w-2.25 before:h-2.25 before:rounded-full before:bg-white
+    before:border-[1.5px] before:border-zinc-300 before:z-10
+    after:content-[''] after:absolute after:-left-4.5 after:top-5.5
+    after:w-px after:h-[calc(100%-9px)] after:bg-zinc-200
+    last:after:hidden last:pb-1.5;
+    }
+    .role.is-current::before {
+        @apply bg-zinc-950 border-zinc-950 shadow-[0_0_0_3px_rgb(9_9_11/0.08)];
+    }
+    /* single-position company: keep alignment, hide pseudos */
+    .timeline-single .role {
+        @apply before:hidden after:hidden py-0;
+    }
+
+    /* shadcn-ish secondary badge */
+    .badge {
+        @apply inline-flex items-center px-2.25 py-px text-[11.5px] font-medium
+    text-zinc-900 bg-zinc-100 border border-transparent rounded-md leading-normal;
+    }
+
+    /* project bullet list */
+    .proj-list {
+        @apply m-0 p-0 pb-2.5 list-none;
+    }
+    .proj-list > li {
+        @apply relative pl-4 py-0.75 text-[13.5px] leading-[1.7] text-zinc-950 text-pretty
+    before:content-[''] before:absolute before:left-0.5 before:top-3.25
+    before:w-1 before:h-1 before:rounded-full before:bg-zinc-300;
+    }
+}
