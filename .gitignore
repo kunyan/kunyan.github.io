@@ -6,6 +6,9 @@
 # Ignore content collection generated files
 .astro
 
+# Superpowers brainstorming session mockups
+.superpowers/
+
 ### dotenv ###
 .env
 
