@@ -3,7 +3,7 @@ title: "TailwindCSS v3 迁移到 v4 的痛苦故事"
 excerpt: "为Red Hat ProdSec Compliance项目升级TailwindCSS的故事"
 date: 2026-03-23
 tags: ["前端开发", "TailwindCSS", "CSS", "迁移升级", "Bootstrap"]
-cover: "/covers/tailwindcss-v3-to-v4.webp"
+cover: "tailwindcss-v3-to-v4.webp"
 ---
 
 TailwindCSS v4其实早在2025年1月就正式推出了，但我的项目一直都没有升级。主要的原因就是迁移的成本太高了。很多的语法，配置已经完全变了，改动极大。

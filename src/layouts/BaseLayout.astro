@@ -1,8 +1,9 @@
 ---
 import '../styles/global.css';
+import { Font } from 'astro:assets';
 import Nav from '../components/Nav.astro';
 import Footer from '../components/Footer.astro';
-import { defaultLang, languageMeta, type Lang } from '../i18n/config';
+import { defaultLang, languageMeta, languages, type Lang } from '../i18n/config';
 import { t } from '../i18n/ui';
 import { localizedPath } from '../i18n/utils';
 
@@ -10,15 +11,65 @@ interface Props {
   lang: Lang;
   title?: string;
   description?: string;
-  /** Slug of the corresponding page in the other language, for the language switcher. Pass null to indicate no counterpart. */
+  /** Path of the same page in the other language, e.g. "/zh/posts/foo/". null if no translation. */
   counterpartPath?: string | null;
+  /** Origins to preconnect to (warms DNS+TCP+TLS). Use sparingly — only on pages that genuinely need them. */
+  preconnect?: string[];
+  /** Absolute URL of an image used for og:image / twitter:image. */
+  ogImage?: string;
+  /** og:type — "article" for posts, "website" otherwise. */
+  ogType?: 'website' | 'article';
+  /** ISO date strings for article metadata. */
+  publishedTime?: string;
+  modifiedTime?: string;
+  /** Article tags / topics. */
+  tags?: string[];
+  /** Schema.org JSON-LD payload(s) — rendered as <script type="application/ld+json"> in <head>. */
+  jsonLd?: Record<string, unknown> | Record<string, unknown>[];
 }
 
-const { lang = defaultLang, counterpartPath } = Astro.props;
+const {
+  lang = defaultLang,
+  counterpartPath,
+  preconnect = [],
+  ogImage,
+  ogType = 'website',
+  publishedTime,
+  modifiedTime,
+  tags = [],
+  jsonLd,
+} = Astro.props;
+
+const jsonLdEntries = jsonLd ? (Array.isArray(jsonLd) ? jsonLd : [jsonLd]) : [];
 const title = Astro.props.title ?? `${t(lang, 'meta.siteName')} — ${t(lang, 'meta.tagline')}`;
 const description = Astro.props.description ?? t(lang, 'meta.description');
 
 const htmlLang = languageMeta[lang].htmlLang;
+const siteName = t(lang, 'meta.siteName');
+
+// Canonical URL — always absolute, drops trailing query/hash, normalizes trailing slash.
+const canonicalURL = new URL(Astro.url.pathname, Astro.site).toString();
+
+// hreflang: emit the current language's URL plus the counterpart's (if it exists).
+// x-default points at the English (default) URL so search engines have a fallback.
+const otherLang: Lang = languages.find((l) => l !== lang) ?? lang;
+const altLinks = [
+  { lang: languageMeta[lang].htmlLang, href: canonicalURL },
+  ...(counterpartPath
+    ? [
+        {
+          lang: languageMeta[otherLang].htmlLang,
+          href: new URL(counterpartPath, Astro.site).toString(),
+        },
+      ]
+    : []),
+];
+const xDefaultHref =
+  lang === defaultLang
+    ? canonicalURL
+    : counterpartPath
+      ? new URL(counterpartPath, Astro.site).toString()
+      : null;
 ---
 
 <!doctype html>
@@ -30,9 +81,49 @@ const htmlLang = languageMeta[lang].htmlLang;
     <title>{title}</title>
     <meta name="description" content={description} />
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
-    <link rel="alternate" type="application/rss+xml" title={t(lang, 'meta.siteName')} href={localizedPath(lang, '/rss.xml')} />
-    <link rel="alternate" hreflang="en" href={`https://yankun.org/en/`} />
-    <link rel="alternate" hreflang="zh-Hans" href={`https://yankun.org/zh/`} />
+
+    <Font cssVariable="--astro-font-inter" preload />
+    <Font cssVariable="--astro-font-jetbrains-mono" />
+    <link rel="alternate" type="application/rss+xml" title={siteName} href={localizedPath(lang, '/rss.xml')} />
+
+    <link rel="canonical" href={canonicalURL} />
+    {altLinks.map((alt) => <link rel="alternate" hreflang={alt.lang} href={alt.href} />)}
+    {xDefaultHref && <link rel="alternate" hreflang="x-default" href={xDefaultHref} />}
+
+    <!-- Open Graph -->
+    <meta property="og:type" content={ogType} />
+    <meta property="og:site_name" content={siteName} />
+    <meta property="og:title" content={title} />
+    <meta property="og:description" content={description} />
+    <meta property="og:url" content={canonicalURL} />
+    <meta property="og:locale" content={languageMeta[lang].locale.replace('-', '_')} />
+    {counterpartPath && (
+      <meta
+        property="og:locale:alternate"
+        content={languageMeta[otherLang].locale.replace('-', '_')}
+      />
+    )}
+    {ogImage && <meta property="og:image" content={ogImage} />}
+    {ogType === 'article' && publishedTime && (
+      <meta property="article:published_time" content={publishedTime} />
+    )}
+    {ogType === 'article' && modifiedTime && (
+      <meta property="article:modified_time" content={modifiedTime} />
+    )}
+    {ogType === 'article' &&
+      tags.map((tag) => <meta property="article:tag" content={tag} />)}
+
+    <!-- Twitter Card -->
+    <meta name="twitter:card" content={ogImage ? 'summary_large_image' : 'summary'} />
+    <meta name="twitter:title" content={title} />
+    <meta name="twitter:description" content={description} />
+    {ogImage && <meta name="twitter:image" content={ogImage} />}
+
+    {preconnect.map((origin) => <link rel="preconnect" href={origin} crossorigin />)}
+
+    {jsonLdEntries.map((entry) => (
+      <script type="application/ld+json" set:html={JSON.stringify(entry)} />
+    ))}
     <!-- Google tag (gtag.js) -->
     <script async src="https://www.googletagmanager.com/gtag/js?id=G-68VX7ENXYE"></script>
     <script is:inline>

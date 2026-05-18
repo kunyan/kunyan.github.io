@@ -11,9 +11,9 @@ const posts = defineCollection({
     /** Optional manual override; if omitted, reading time is auto-computed from the body. */
     readingTime: z.string().optional(),
     tags: z.array(z.string()),
-    // Path to a cover image under public/, e.g. "/covers/foo.svg".
-    // Defaults to the neutral placeholder if a post doesn't specify one.
-    cover: z.string().default('/covers/default.svg'),
+    // Basename of a cover image under src/assets/covers/, e.g. "foo.webp".
+    // The Image pipeline processes it (optimization, srcset, content-hashed URL).
+    cover: z.string(),
     draft: z.boolean().optional().default(false),
     /** Set false to hide the comments section for a specific post. */
     comments: z.boolean().optional().default(true),

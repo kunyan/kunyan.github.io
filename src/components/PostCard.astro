@@ -1,7 +1,9 @@
 ---
+import { Image } from 'astro:assets';
 import { formatDate, getReadingTime, postHref, type PostEntry } from '../i18n/utils';
 import { t } from '../i18n/ui';
 import type { Lang } from '../i18n/config';
+import { resolveCover } from '../lib/covers';
 
 interface Props {
   post: PostEntry;
@@ -10,6 +12,7 @@ interface Props {
 
 const { post, lang } = Astro.props;
 const href = postHref(post);
+const cover = resolveCover(post.data.cover);
 ---
 
 <a
@@ -21,9 +24,11 @@ const href = postHref(post);
     <div
       class="relative aspect-[16/10] w-full overflow-hidden rounded-lg border border-border bg-muted"
     >
-      <img
-        src={post.data.cover}
+      <Image
+        src={cover}
         alt=""
+        widths={[480, 800]}
+        sizes="(min-width: 1280px) 25vw, (min-width: 640px) 50vw, 100vw"
         loading="lazy"
         class="h-full w-full object-cover transition-transform duration-500 ease-out lg:group-hover:scale-105"
       />
@@ -43,7 +48,7 @@ const href = postHref(post);
       <div
         class="mt-4 flex flex-wrap items-center gap-x-2 gap-y-1 text-xs text-muted-foreground"
       >
-        <span>{formatDate(post.data.date, lang)}</span>
+        <time datetime={post.data.date.toISOString()}>{formatDate(post.data.date, lang)}</time>
         <span aria-hidden="true">·</span>
         <span>{getReadingTime(post)} {t(lang, 'posts.readSuffix')}</span>
         <span aria-hidden="true">·</span>

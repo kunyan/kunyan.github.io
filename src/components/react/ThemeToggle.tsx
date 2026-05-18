@@ -84,7 +84,7 @@ export default function ThemeToggle({ labels }: { labels: Labels }) {
         <div
           role="menu"
           aria-label={labels.toggle}
-          className="absolute top-full right-0 z-50 mt-1 min-w-[9rem] overflow-hidden rounded-md border border-border bg-popover p-1 text-popover-foreground shadow-md"
+          className="absolute top-full right-0 z-50 mt-1 min-w-36 overflow-hidden rounded-md border border-border bg-popover p-1 text-popover-foreground shadow-md"
         >
           <MenuItem
             label={labels.light}

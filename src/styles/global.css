@@ -81,14 +81,16 @@
   --radius-md: calc(var(--radius) - 2px);
   --radius-sm: calc(var(--radius) - 4px);
 
-  /* Apple system font stack first; sensible fallbacks for Windows / Linux. */
-  --font-sans: -apple-system, BlinkMacSystemFont, "SF Pro Text",
-    "Helvetica Neue", system-ui, "Segoe UI", Roboto, Helvetica, Arial,
-    sans-serif;
-  --font-mono: ui-monospace, SFMono-Regular, "SF Mono", Menlo, Monaco, Consolas,
-    "Liberation Mono", "Courier New", monospace;
-  --font-serif: "New York", ui-serif, Georgia, Cambria, "Times New Roman",
-    Times, serif;
+  /* Inter (sans) + JetBrains Mono (code) — self-hosted via Astro's font pipeline.
+     Each --astro-font-* variable already contains the family name plus a
+     metric-matched local fallback Astro generates to prevent CLS. We append a
+     final system stack as belt-and-braces. CJK glyphs always fall through to
+     the OS's CJK font (PingFang / Microsoft YaHei / Noto Sans CJK). */
+  --font-sans: var(--astro-font-inter), -apple-system, BlinkMacSystemFont,
+    "Helvetica Neue", system-ui, "Segoe UI", Roboto, Arial, sans-serif;
+  --font-mono: var(--astro-font-jetbrains-mono), ui-monospace, SFMono-Regular,
+    "SF Mono", Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+  --font-serif: ui-serif, Georgia, Cambria, "Times New Roman", Times, serif;
 
   --breakpoint-2xl: 1400px;
 

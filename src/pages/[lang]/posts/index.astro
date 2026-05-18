@@ -1,5 +1,6 @@
 ---
 import type { GetStaticPaths } from 'astro';
+import { getImage } from 'astro:assets';
 import BaseLayout from '../../../layouts/BaseLayout.astro';
 import PostsExplorer, {
   type SerializedPost,
@@ -8,6 +9,7 @@ import PostsExplorer, {
 import { languages, isLang, languageMeta, type Lang } from '../../../i18n/config';
 import { t } from '../../../i18n/ui';
 import { getPostsByLang, getReadingTime, localizedPath, postHref } from '../../../i18n/utils';
+import { resolveCover } from '../../../lib/covers';
 
 export const getStaticPaths = (() =>
   languages.map((lang) => ({ params: { lang } }))) satisfies GetStaticPaths;
@@ -17,16 +19,31 @@ if (!isLang(lang)) throw new Error(`Invalid lang param: ${lang}`);
 
 const posts = await getPostsByLang(lang);
 
-const serialized: SerializedPost[] = posts.map((p) => ({
-  id: p.id,
-  title: p.data.title,
-  excerpt: p.data.excerpt,
-  date: p.data.date.toISOString(),
-  readingTime: getReadingTime(p),
-  tags: p.data.tags,
-  coverUrl: p.data.cover,
-  href: postHref(p),
-}));
+// Pre-resolve every cover through Astro's image pipeline so the React island
+// can render <img> with optimized URLs, srcset, and intrinsic dimensions.
+const serialized: SerializedPost[] = await Promise.all(
+  posts.map(async (p) => {
+    const cover = resolveCover(p.data.cover);
+    const optimized = await getImage({
+      src: cover,
+      widths: [480, 800],
+      format: 'webp',
+    });
+    return {
+      id: p.id,
+      title: p.data.title,
+      excerpt: p.data.excerpt,
+      date: p.data.date.toISOString(),
+      readingTime: getReadingTime(p),
+      tags: p.data.tags,
+      coverUrl: optimized.src,
+      coverSrcSet: optimized.srcSet.attribute,
+      coverWidth: cover.width,
+      coverHeight: cover.height,
+      href: postHref(p),
+    };
+  }),
+);
 
 const tagCounts = new Map<string, number>();
 posts.forEach((p) =>

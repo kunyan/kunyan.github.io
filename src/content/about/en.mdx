@@ -4,8 +4,8 @@ intro: "About Kun's Notes, and the person behind it."
 ---
 
 import { Image } from 'astro:assets';
-import aboutWorkImage from '../../../public/about/about-my-work.jpg';
-import aboutLifeImage from '../../../public/about/about-my-life.jpg';
+import aboutWorkImage from '../../assets/about/about-my-work.jpg';
+import aboutLifeImage from '../../assets/about/about-my-life.jpg';
 
 A software engineer with over a decade of experience, currently working at [Red Hat](https://www.redhat.com) as a **Principal Software Engineer**. For the past 11 years, I've been at Red Hat, building products for enterprise customers around the world.
 
@@ -26,7 +26,12 @@ The second is **web products for enterprise customers**. From customer-portal to
 
 ## How I work
 
-<Image src={aboutWorkImage} alt="about my work" width={800} />
+<Image
+  src={aboutWorkImage}
+  alt="A snapshot of how I work"
+  widths={[480, 800, 1200]}
+  sizes="(min-width: 1024px) 70ch, 100vw"
+/>
 
 I spend most of my time on cross-border, cross-timezone teams, with English as the daily working language. I've led teams of 10+, worked as an architect, and worked as an engineer writing code day-to-day — and neither of those two identities is one I want to give up.
 
@@ -34,7 +39,12 @@ If there's anything I particularly care about, it's roughly this: **stay close t
 
 ## Outside of work
 
-<Image src={aboutLifeImage} alt="about my life" height={800} />
+<Image
+  src={aboutLifeImage}
+  alt="A snapshot of life outside work"
+  widths={[480, 800, 1200]}
+  sizes="(min-width: 1024px) 70ch, 100vw"
+/>
 
 
 I'm a marathon and triathlon enthusiast.

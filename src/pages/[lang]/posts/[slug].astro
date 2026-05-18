@@ -1,11 +1,14 @@
 ---
 import type { GetStaticPaths } from 'astro';
+import { Image, getImage } from 'astro:assets';
 import { getCollection, render } from 'astro:content';
 import BaseLayout from '../../../layouts/BaseLayout.astro';
 import Toc from '../../../components/react/Toc.tsx';
 import BackToTop from '../../../components/react/BackToTop.tsx';
-import Comments from '../../../components/react/Comments.tsx';
+import Comments from '../../../components/Comments.astro';
 import { Icon } from 'astro-icon/components';
+import { resolveCover } from '../../../lib/covers';
+import { isConfigured as giscusConfigured } from '../../../lib/giscus';
 import { languages, type Lang, isLang } from '../../../i18n/config';
 import { t } from '../../../i18n/ui';
 import {
@@ -36,7 +39,7 @@ const lang = Astro.params.lang;
 if (!isLang(lang)) throw new Error(`Invalid lang param: ${lang}`);
 
 const { Content, headings } = await render(post);
-const coverUrl = post.data.cover;
+const cover = resolveCover(post.data.cover);
 
 const sameLangPosts = await getPostsByLang(lang);
 const idx = sameLangPosts.findIndex((p) => p.id === post.id);
@@ -48,6 +51,36 @@ const counterpart = await getCounterpart(post, otherLang);
 const counterpartPath = counterpart ? postHref(counterpart) : null;
 
 const pageTitle = `${post.data.title} · ${t(lang, 'meta.siteName')}`;
+
+// Warm Giscus + GitHub API connections only when this post will actually render comments.
+const commentsRender = post.data.comments !== false && giscusConfigured();
+const preconnect = commentsRender ? ['https://giscus.app', 'https://api.github.com'] : [];
+
+// Pre-resolve a 1200×630 OG image (Open Graph / Twitter Card standard) from the cover.
+const ogVariant = await getImage({ src: cover, width: 1200, format: 'webp' });
+const ogImage = new URL(ogVariant.src, Astro.site).toString();
+
+// Schema.org BlogPosting JSON-LD — gives Google enough to render a rich result.
+const canonicalURL = new URL(Astro.url.pathname, Astro.site).toString();
+const author = {
+  '@type': 'Person',
+  name: 'Kun Yan',
+  url: Astro.site?.toString() ?? 'https://yankun.org/',
+};
+const articleSchema = {
+  '@context': 'https://schema.org',
+  '@type': 'BlogPosting',
+  headline: post.data.title,
+  description: post.data.excerpt,
+  image: ogImage,
+  datePublished: post.data.date.toISOString(),
+  dateModified: post.data.date.toISOString(),
+  author,
+  publisher: author,
+  mainEntityOfPage: { '@type': 'WebPage', '@id': canonicalURL },
+  inLanguage: lang === 'zh' ? 'zh-CN' : 'en-US',
+  keywords: post.data.tags.join(', '),
+};
 ---
 
 <BaseLayout
@@ -55,6 +88,12 @@ const pageTitle = `${post.data.title} · ${t(lang, 'meta.siteName')}`;
   title={pageTitle}
   description={post.data.excerpt}
   counterpartPath={counterpartPath}
+  preconnect={preconnect}
+  ogImage={ogImage}
+  ogType="article"
+  publishedTime={post.data.date.toISOString()}
+  tags={post.data.tags}
+  jsonLd={articleSchema}
 >
   <article class="mx-auto w-full max-w-350 px-6 pt-12 pb-24 lg:px-10">
     <div class="lg:grid lg:grid-cols-[minmax(0,1fr)_240px] lg:gap-12 xl:grid-cols-[minmax(0,1fr)_260px] xl:gap-16">
@@ -74,7 +113,9 @@ const pageTitle = `${post.data.title} · ${t(lang, 'meta.siteName')}`;
         <div class="mt-6 flex flex-wrap items-center gap-x-3 gap-y-2 text-sm text-muted-foreground">
           <span class="inline-flex items-center gap-1.5">
             <Icon name="lucide:calendar" width={14} height={14} />
-            {formatDate(post.data.date, lang)}
+            <time datetime={post.data.date.toISOString()}>
+              {formatDate(post.data.date, lang)}
+            </time>
           </span>
           <span aria-hidden="true">·</span>
           <span class="inline-flex items-center gap-1.5">
@@ -93,9 +134,16 @@ const pageTitle = `${post.data.title} · ${t(lang, 'meta.siteName')}`;
           </span>
         </div>
 
-        <div class="mt-10 aspect-[16/8] w-full overflow-hidden rounded-lg border border-border bg-muted">
-          <img src={coverUrl} alt="" class="h-full w-full object-cover" />
-        </div>
+        <figure class="mt-10 overflow-hidden rounded-lg border border-border bg-muted">
+          <Image
+            src={cover}
+            alt=""
+            widths={[800, 1200, 1600]}
+            sizes="(min-width: 1280px) 1140px, (min-width: 1024px) calc(100vw - 320px), 100vw"
+            class="h-auto w-full"
+            loading="eager"
+          />
+        </figure>
 
         <p class="mt-10 text-balance text-xl leading-relaxed text-muted-foreground">
           {post.data.excerpt}
@@ -152,7 +200,7 @@ const pageTitle = `${post.data.title} · ${t(lang, 'meta.siteName')}`;
               <h2 class="mb-6 text-base font-semibold tracking-tight">
                 {t(lang, 'post.comments')}
               </h2>
-              <Comments client:visible lang={lang} />
+              <Comments lang={lang} />
             </section>
           )
         }

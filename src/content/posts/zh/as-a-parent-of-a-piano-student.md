@@ -3,7 +3,7 @@ title: "作为钢琴琴童家长的六个真心话"
 excerpt: "陪练几年下来,有些事情和买琴前想象的不太一样。"
 date: 2023-12-29
 tags: [生活随笔, 育儿, 钢琴]
-cover: "/covers/as-a-parent-of-a-piano-student.webp"
+cover: "as-a-parent-of-a-piano-student.webp"
 ---
 
 家里孩子学钢琴有一阵子了。最近常有朋友问我学琴的事——买什么琴、找什么老师、孩子能坚持吗——干脆把这几年陪练下来的真实感受写下来。

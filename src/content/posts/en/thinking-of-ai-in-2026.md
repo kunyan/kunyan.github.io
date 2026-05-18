@@ -3,7 +3,7 @@ title: "Some Shifts in How I Think About AI in 2026"
 excerpt: "AI seems different from previous tech bubbles — it is genuinely changing the way we live."
 date: 2026-4-1
 tags: [AI, "Claude Code", "Cursor", "ChatGPT"]
-cover: "/covers/thinking-of-ai-in-2026.png"
+cover: "thinking-of-ai-in-2026.png"
 ---
 
 ## From “Myth” to “Artificial Idiocy”

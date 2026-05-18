@@ -3,7 +3,7 @@ title: Google ADK 使用 vLLM 做 Provider 时，MCP tools 不会被调用
 excerpt: "在使用 Google ADK 开发 Agent 时，发现如果用 vLLM 作为模型 provider，MCP tools 能被识别，但永远不会被调用"
 date: 2025-12-12
 tags: ["Google ADK", "Agent", "AI", "MCP", "vLLM"]
-cover: "/covers/google-adk-vllm-mcp-failed.png"
+cover: "google-adk-vllm-mcp-failed.png"
 ---
 
 我最近在用 Google ADK 开发一个 Agent 项目。Red Hat 内部很多同事也在用 ADK，但奇怪的是这个问题他们都没遇到——大概是因为他们都直接用 Gemini，没走 vLLM 这条路。我加入项目时间晚，刚好踩进了这个坑里。

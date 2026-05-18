@@ -10,6 +10,9 @@ export interface SerializedPost {
   readingTime: string;
   tags: string[];
   coverUrl: string;
+  coverSrcSet: string;
+  coverWidth: number;
+  coverHeight: number;
   href: string;
 }
 
@@ -542,7 +545,7 @@ function FilterDrawer({
   return (
     <div
       className={cn(
-        'fixed inset-0 z-[60] lg:hidden',
+        'fixed inset-0 z-60 lg:hidden',
         open ? 'pointer-events-auto' : 'pointer-events-none',
       )}
       aria-hidden={!open}
@@ -592,11 +595,16 @@ function GalleryCard({
   return (
     <a href={post.href} className="group block focus-visible:outline-none">
       <article className="flex h-full flex-col">
-        <div className="relative aspect-[16/10] w-full overflow-hidden rounded-lg border border-border bg-muted">
+        <div className="relative aspect-16/10 w-full overflow-hidden rounded-lg border border-border bg-muted">
           <img
             src={post.coverUrl}
+            srcSet={post.coverSrcSet}
+            sizes="(min-width: 1280px) 25vw, (min-width: 640px) 50vw, 100vw"
+            width={post.coverWidth}
+            height={post.coverHeight}
             alt=""
             loading="lazy"
+            decoding="async"
             className="h-full w-full object-cover transition-transform duration-500 ease-out lg:group-hover:scale-105"
           />
         </div>
@@ -614,7 +622,7 @@ function GalleryCard({
             {post.excerpt}
           </p>
           <div className="mt-4 flex flex-wrap items-center gap-x-2 gap-y-1 text-muted-foreground text-xs">
-            <span>{formatDate(post.date)}</span>
+            <time dateTime={post.date}>{formatDate(post.date)}</time>
             <span aria-hidden="true">·</span>
             <span>
               {post.readingTime} {readSuffix}
@@ -646,11 +654,16 @@ function ListRow({
   return (
     <a href={post.href} className="group block py-8 transition-colors sm:py-10 lg:py-12">
       <article className="flex items-center gap-5 sm:gap-7 lg:gap-10">
-        <div className="relative aspect-[4/3] w-24 shrink-0 overflow-hidden rounded-md border border-border bg-muted sm:aspect-[16/10] sm:w-44 lg:w-56">
+        <div className="relative aspect-4/3 w-24 shrink-0 overflow-hidden rounded-md border border-border bg-muted sm:aspect-16/10 sm:w-44 lg:w-56">
           <img
             src={post.coverUrl}
+            srcSet={post.coverSrcSet}
+            sizes="(min-width: 1024px) 224px, (min-width: 640px) 176px, 96px"
+            width={post.coverWidth}
+            height={post.coverHeight}
             alt=""
             loading="lazy"
+            decoding="async"
             className="h-full w-full object-cover transition-transform duration-500 ease-out lg:group-hover:scale-105"
           />
         </div>
@@ -670,7 +683,7 @@ function ListRow({
             {post.excerpt}
           </p>
           <div className="mt-3 flex flex-wrap items-center gap-x-2 gap-y-1 text-muted-foreground text-xs sm:mt-5 sm:text-sm">
-            <span>{formatDate(post.date)}</span>
+            <time dateTime={post.date}>{formatDate(post.date)}</time>
             <span aria-hidden="true">·</span>
             <span>
               {post.readingTime} {readSuffix}

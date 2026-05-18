@@ -3,7 +3,7 @@ title: "为什么我更推荐使用 Astro"
 excerpt: "我曾经是 framework-less 的推崇者，做前端网站更倾向直接用 React。但折腾了一圈之后，我发现 Astro 才是更好的选择。"
 date: 2026-01-17
 tags: ["前端开发", "Next.js", "Astro", "SSR", "React", "Vue", "Vite"]
-cover: "/covers/why-prefer-use-astro.webp"
+cover: "why-prefer-use-astro.webp"
 ---
 ## 前端开发框架进化史
 

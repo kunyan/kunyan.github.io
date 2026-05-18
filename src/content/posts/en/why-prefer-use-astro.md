@@ -3,7 +3,7 @@ title: "Why I Recommend Astro"
 excerpt: "I used to be a framework-less evangelist — for frontend sites, I'd reach for plain React. But after years of bouncing around, I've come to think Astro is the better choice."
 date: 2026-01-17
 tags: ["Frontend", "Next.js", "Astro", "SSR", "React", "Vue", "Vite"]
-cover: "/covers/why-prefer-use-astro.webp"
+cover: "why-prefer-use-astro.webp"
 ---
 
 ## A Brief History of Frontend Frameworks

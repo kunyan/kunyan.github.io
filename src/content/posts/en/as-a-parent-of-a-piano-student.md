@@ -3,7 +3,7 @@ title: "Six Honest Things I'd Tell Any Parent About to Start Their Kid on Piano"
 excerpt: "A few years into being a practice parent, some things look different than they did before we bought the piano."
 date: 2023-12-29
 tags: [Essays, Parenting, Piano]
-cover: "/covers/as-a-parent-of-a-piano-student.webp"
+cover: "as-a-parent-of-a-piano-student.webp"
 ---
 
 Our kid has been learning piano for a while now. Lately friends keep asking me about it — which piano to buy, how to find a teacher, will the kid stick with it — so I figured I'd just write down what these years of being a practice parent have actually felt like.

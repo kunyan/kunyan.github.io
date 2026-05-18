@@ -3,7 +3,7 @@ title: "2026 对于 AI 的一些认知转变"
 excerpt: "AI似乎和之前的几轮泡沫不太一样，它真的在改变我们的生活方式"
 date: 2026-4-1
 tags: [AI, "Claude Code", "Cursor", "ChatGPT"]
-cover: "/covers/thinking-of-ai-in-2026.png"
+cover: "thinking-of-ai-in-2026.png"
 ---
 
 

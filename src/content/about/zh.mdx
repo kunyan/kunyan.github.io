@@ -4,8 +4,8 @@ intro: "关于 Kun's Notes，以及它背后的那个人。"
 ---
 
 import { Image } from 'astro:assets';
-import aboutWorkImage from '../../../public/about/about-my-work.jpg';
-import aboutLifeImage from '../../../public/about/about-my-life.jpg';
+import aboutWorkImage from '../../assets/about/about-my-work.jpg';
+import aboutLifeImage from '../../assets/about/about-my-life.jpg';
 
 一名工作了十多年的资深软件工程师,目前在Red Hat 担任 Principal Engineer。过去十余年里,我一直在Red Hat,做着面向全球企业客户的产品。
 
@@ -26,7 +26,12 @@ import aboutLifeImage from '../../../public/about/about-my-life.jpg';
 
 ## 关于工作方式
 
-<Image src={aboutWorkImage} alt="about my work" width={800} />
+<Image
+  src={aboutWorkImage}
+  alt="工作场景"
+  widths={[480, 800, 1200]}
+  sizes="(min-width: 1024px) 70ch, 100vw"
+/>
 
 我大部分时间都在跨国、跨时区的团队里工作,英文是日常沟通语言。带过 10 人以上的团队,做过架构师,也做过具体写代码的工程师——这两个身份我都不想丢。
 
@@ -35,7 +40,12 @@ import aboutLifeImage from '../../../public/about/about-my-life.jpg';
 
 ## 工作之外
 
-<Image src={aboutLifeImage} alt="about my life" height={800} />
+<Image
+  src={aboutLifeImage}
+  alt="工作之外的生活片段"
+  widths={[480, 800, 1200]}
+  sizes="(min-width: 1024px) 70ch, 100vw"
+/>
 
 我是一名马拉松和铁人三项爱好者。
 跑过多场半程和全程马拉松,完成过多场半程铁三、奥运标铁,以及一次 IRONMAN 70.3。目前的战车是 Specialized Tarmac SL8。

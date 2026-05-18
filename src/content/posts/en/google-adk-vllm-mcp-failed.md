@@ -3,7 +3,7 @@ title: "Google ADK + vLLM: MCP Tools Are Recognized but Never Called"
 excerpt: "While building an Agent with Google ADK, I discovered that using vLLM as the model provider lets MCP tools be discovered — but they never actually get invoked."
 date: 2025-12-12
 tags: ["Google ADK", "Agent", "AI", "MCP", "vLLM"]
-cover: "/covers/google-adk-vllm-mcp-failed.png"
+cover: "google-adk-vllm-mcp-failed.png"
 ---
 
 I've been building an Agent project with Google ADK lately. A lot of my coworkers at Red Hat use ADK too, but oddly enough none of them ran into this issue — probably because they all use Gemini directly and never went down the vLLM path. I joined the project late, and that's exactly where I stepped on the mine.

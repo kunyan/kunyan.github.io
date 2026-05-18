@@ -3,7 +3,7 @@ title: "The Painful Story of Migrating from TailwindCSS v3 to v4"
 excerpt: "How I upgraded TailwindCSS for the Red Hat ProdSec Compliance project"
 date: 2026-03-23
 tags: ["frontend", "TailwindCSS", "CSS", "migration", "Bootstrap"]
-cover: "/covers/tailwindcss-v3-to-v4.webp"
+cover: "tailwindcss-v3-to-v4.webp"
 ---
 
 TailwindCSS v4 officially shipped back in January 2025, but I held off on upgrading my project for almost a year. The reason was simple: the migration cost looked enormous. The syntax, the configuration, the mental model — almost everything had changed.
