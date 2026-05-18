@@ -20,6 +20,8 @@ const posts = defineCollection({
   }),
 });
 
+// Static page bodies (currently only About) that vary per language.
+// One entry per language: id = "en", "zh", …
 const about = defineCollection({
   loader: glob({ pattern: '*.{md,mdx}', base: './src/content/about' }),
   schema: z.object({
@@ -28,6 +30,7 @@ const about = defineCollection({
   }),
 });
 
+// Photography entries; one frontmatter file per photo, image binaries in src/assets/gallery/.
 const gallery = defineCollection({
   loader: glob({ pattern: '*.md', base: './src/content/gallery' }),
   schema: z.object({
