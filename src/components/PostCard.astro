@@ -1,9 +1,14 @@
 ---
-import { Image } from 'astro:assets';
-import { formatDate, getReadingTime, postHref, type PostEntry } from '../i18n/utils';
-import { t } from '../i18n/ui';
-import type { Lang } from '../i18n/config';
-import { resolveCover } from '../lib/covers';
+import { Image } from "astro:assets";
+import {
+  formatDate,
+  getReadingTime,
+  postHref,
+  type PostEntry,
+} from "../i18n/utils";
+import { t } from "../i18n/ui";
+import type { Lang } from "../i18n/config";
+import { resolveCover } from "../lib/covers";
 
 interface Props {
   post: PostEntry;
@@ -22,7 +27,7 @@ const cover = resolveCover(post.data.cover);
 >
   <article class="flex h-full flex-col">
     <div
-      class="relative aspect-[16/10] w-full overflow-hidden rounded-lg border border-border bg-muted"
+      class="relative aspect-16/10 w-full overflow-hidden rounded-lg border border-border bg-muted"
     >
       <Image
         src={cover}
@@ -48,9 +53,11 @@ const cover = resolveCover(post.data.cover);
       <div
         class="mt-4 flex flex-wrap items-center gap-x-2 gap-y-1 text-xs text-muted-foreground"
       >
-        <time datetime={post.data.date.toISOString()}>{formatDate(post.data.date, lang)}</time>
+        <time datetime={post.data.date.toISOString()}
+          >{formatDate(post.data.date, lang)}</time
+        >
         <span aria-hidden="true">·</span>
-        <span>{getReadingTime(post)} {t(lang, 'posts.readSuffix')}</span>
+        <span>{getReadingTime(post)} {t(lang, "posts.readSuffix")}</span>
         <span aria-hidden="true">·</span>
         <span class="flex flex-wrap gap-1.5">
           {

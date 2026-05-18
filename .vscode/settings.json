@@ -1,9 +1,75 @@
 {
-  "editor.codeActionsOnSave": {
-    "source.action.noDuplicateClasses.biome": "explicit",
-    "source.fixAll.biome": "explicit"
-  },
+  // Astro files are handled exclusively by the Astro language server.
+  // Biome is scoped to TS/JS/JSON below; it never touches .astro / .md / .mdx / .css.
   "files.associations": {
     "*.css": "tailwindcss"
+  },
+
+  // .astro → Astro extension
+  "[astro]": {
+    "editor.defaultFormatter": "astro-build.astro-vscode",
+    "editor.formatOnSave": true
+  },
+
+  // .ts / .tsx / .js / .jsx → Biome (format + class sort + safe fixes)
+  "[typescript]": {
+    "editor.defaultFormatter": "biomejs.biome",
+    "editor.formatOnSave": true,
+    "editor.codeActionsOnSave": {
+      "source.action.noDuplicateClasses.biome": "explicit",
+      "source.fixAll.biome": "explicit"
+    }
+  },
+  "[typescriptreact]": {
+    "editor.defaultFormatter": "biomejs.biome",
+    "editor.formatOnSave": true,
+    "editor.codeActionsOnSave": {
+      "source.action.noDuplicateClasses.biome": "explicit",
+      "source.fixAll.biome": "explicit"
+    }
+  },
+  "[javascript]": {
+    "editor.defaultFormatter": "biomejs.biome",
+    "editor.formatOnSave": true,
+    "editor.codeActionsOnSave": {
+      "source.action.noDuplicateClasses.biome": "explicit",
+      "source.fixAll.biome": "explicit"
+    }
+  },
+  "[javascriptreact]": {
+    "editor.defaultFormatter": "biomejs.biome",
+    "editor.formatOnSave": true,
+    "editor.codeActionsOnSave": {
+      "source.action.noDuplicateClasses.biome": "explicit",
+      "source.fixAll.biome": "explicit"
+    }
+  },
+
+  // JSON: format only — no lint fixes needed
+  "[json]": {
+    "editor.defaultFormatter": "biomejs.biome",
+    "editor.formatOnSave": true
+  },
+  "[jsonc]": {
+    "editor.defaultFormatter": "biomejs.biome",
+    "editor.formatOnSave": true
+  },
+
+  // Markdown / MDX: don't auto-format (Biome can't parse them well, and we exclude
+  // them in biome.json anyway — leaving formatOnSave on would just be noise).
+  "[markdown]": {
+    "editor.formatOnSave": false
+  },
+  "[mdx]": {
+    "editor.formatOnSave": false
+  },
+
+  // Tailwind IntelliSense inside cn(...) calls and Astro's class:list={[...]}
+  "tailwindCSS.experimental.classRegex": [
+    ["cn\\(([^)]*)\\)", "[\"'`]([^\"'`]*)[\"'`]"],
+    ["class:list=\\{\\[([^\\]]*)", "[\"'`]([^\"'`]*)[\"'`]"]
+  ],
+  "tailwindCSS.includeLanguages": {
+    "astro": "html"
   }
 }

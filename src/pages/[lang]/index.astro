@@ -1,12 +1,16 @@
 ---
-import type { GetStaticPaths } from 'astro';
-import BaseLayout from '../../layouts/BaseLayout.astro';
-import Hero from '../../components/Hero.astro';
-import PostCard from '../../components/PostCard.astro';
-import { Icon } from 'astro-icon/components';
-import { languages, type Lang, isLang } from '../../i18n/config';
-import { t } from '../../i18n/ui';
-import { getCounterpart, getPostsByLang, localizedPath } from '../../i18n/utils';
+import type { GetStaticPaths } from "astro";
+import BaseLayout from "../../layouts/BaseLayout.astro";
+import Hero from "../../components/Hero.astro";
+import PostCard from "../../components/PostCard.astro";
+import { Icon } from "astro-icon/components";
+import { languages, type Lang, isLang } from "../../i18n/config";
+import { t } from "../../i18n/ui";
+import {
+  getCounterpart,
+  getPostsByLang,
+  localizedPath,
+} from "../../i18n/utils";
 
 export const getStaticPaths = (() =>
   languages.map((lang) => ({ params: { lang } }))) satisfies GetStaticPaths;
@@ -20,14 +24,16 @@ const newest = posts[0];
 
 // Language switcher: home page always has a counterpart (the other language's home).
 const otherLang: Lang = languages.find((l) => l !== lang) ?? lang;
-const counterpartPath = localizedPath(otherLang, '/');
+const counterpartPath = localizedPath(otherLang, "/");
 ---
 
 <BaseLayout lang={lang} counterpartPath={counterpartPath}>
   <Hero lang={lang} newestTitle={newest?.data.title} />
 
   <section class="container pb-24 pt-4">
-    <div class="grid grid-cols-1 gap-x-6 gap-y-10 sm:grid-cols-2 lg:grid-cols-3">
+    <div
+      class="grid grid-cols-1 gap-x-6 gap-y-10 sm:grid-cols-2 lg:grid-cols-3"
+    >
       {recent.map((p) => <PostCard post={p} lang={lang} />)}
     </div>
 
@@ -35,10 +41,10 @@ const counterpartPath = localizedPath(otherLang, '/');
       posts.length > 0 && (
         <div class="mt-16 flex justify-center">
           <a
-            href={localizedPath(lang, '/posts/')}
+            href={localizedPath(lang, "/posts/")}
             class="group inline-flex h-11 items-center justify-center gap-2 whitespace-nowrap rounded-md bg-primary px-6 text-sm font-medium text-primary-foreground transition-colors hover:bg-primary/90"
           >
-            {t(lang, 'home.viewAll', { n: posts.length })}
+            {t(lang, "home.viewAll", { n: posts.length })}
             <Icon
               name="lucide:arrow-right"
               width={16}

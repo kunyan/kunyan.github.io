@@ -1,15 +1,25 @@
 ---
-import type { GetStaticPaths } from 'astro';
-import { getImage } from 'astro:assets';
-import BaseLayout from '../../../layouts/BaseLayout.astro';
+import type { GetStaticPaths } from "astro";
+import { getImage } from "astro:assets";
+import BaseLayout from "../../../layouts/BaseLayout.astro";
 import PostsExplorer, {
   type SerializedPost,
   type ExplorerStrings,
-} from '../../../components/react/PostsExplorer.tsx';
-import { languages, isLang, languageMeta, type Lang } from '../../../i18n/config';
-import { t } from '../../../i18n/ui';
-import { getPostsByLang, getReadingTime, localizedPath, postHref } from '../../../i18n/utils';
-import { resolveCover } from '../../../lib/covers';
+} from "../../../components/react/PostsExplorer.tsx";
+import {
+  languages,
+  isLang,
+  languageMeta,
+  type Lang,
+} from "../../../i18n/config";
+import { t } from "../../../i18n/ui";
+import {
+  getPostsByLang,
+  getReadingTime,
+  localizedPath,
+  postHref,
+} from "../../../i18n/utils";
+import { resolveCover } from "../../../lib/covers";
 
 export const getStaticPaths = (() =>
   languages.map((lang) => ({ params: { lang } }))) satisfies GetStaticPaths;
@@ -27,7 +37,7 @@ const serialized: SerializedPost[] = await Promise.all(
     const optimized = await getImage({
       src: cover,
       widths: [480, 800],
-      format: 'webp',
+      format: "webp",
     });
     return {
       id: p.id,
@@ -57,60 +67,60 @@ const today = new Date().toISOString();
 const locale = languageMeta[lang].locale;
 
 const explorerStrings: ExplorerStrings = {
-  filters: t(lang, 'posts.filters'),
-  search: t(lang, 'posts.search'),
-  searchPlaceholder: t(lang, 'posts.searchPlaceholder'),
-  tags: t(lang, 'posts.tags'),
-  date: t(lang, 'posts.date'),
-  dateAll: t(lang, 'posts.dateAll'),
-  dateWeek: t(lang, 'posts.dateWeek'),
-  dateMonth: t(lang, 'posts.dateMonth'),
-  dateYear: t(lang, 'posts.dateYear'),
-  clearFilters: t(lang, 'posts.clearFilters'),
-  clearFiltersWithCount: t(lang, 'posts.clearFiltersWithCount'),
-  clearAll: t(lang, 'posts.clearAll'),
-  galleryView: t(lang, 'posts.galleryView'),
-  listView: t(lang, 'posts.listView'),
-  sortLabel: t(lang, 'posts.sortLabel'),
-  sortNewest: t(lang, 'posts.sortNewest'),
-  sortOldest: t(lang, 'posts.sortOldest'),
-  sortShortest: t(lang, 'posts.sortShortest'),
-  sortLongest: t(lang, 'posts.sortLongest'),
-  empty: t(lang, 'posts.empty'),
-  emptyHint: t(lang, 'posts.emptyHint'),
-  showOne: t(lang, 'posts.showOne'),
-  showMany: t(lang, 'posts.showMany'),
-  countOne: t(lang, 'posts.countOne'),
-  countMany: t(lang, 'posts.countMany'),
-  pagination: t(lang, 'posts.pagination'),
-  previous: t(lang, 'posts.previous'),
-  next: t(lang, 'posts.next'),
-  previousPage: t(lang, 'posts.previousPage'),
-  nextPage: t(lang, 'posts.nextPage'),
-  removeFilter: t(lang, 'posts.removeFilter'),
-  readSuffix: t(lang, 'posts.readSuffix'),
+  filters: t(lang, "posts.filters"),
+  search: t(lang, "posts.search"),
+  searchPlaceholder: t(lang, "posts.searchPlaceholder"),
+  tags: t(lang, "posts.tags"),
+  date: t(lang, "posts.date"),
+  dateAll: t(lang, "posts.dateAll"),
+  dateWeek: t(lang, "posts.dateWeek"),
+  dateMonth: t(lang, "posts.dateMonth"),
+  dateYear: t(lang, "posts.dateYear"),
+  clearFilters: t(lang, "posts.clearFilters"),
+  clearFiltersWithCount: t(lang, "posts.clearFiltersWithCount"),
+  clearAll: t(lang, "posts.clearAll"),
+  galleryView: t(lang, "posts.galleryView"),
+  listView: t(lang, "posts.listView"),
+  sortLabel: t(lang, "posts.sortLabel"),
+  sortNewest: t(lang, "posts.sortNewest"),
+  sortOldest: t(lang, "posts.sortOldest"),
+  sortShortest: t(lang, "posts.sortShortest"),
+  sortLongest: t(lang, "posts.sortLongest"),
+  empty: t(lang, "posts.empty"),
+  emptyHint: t(lang, "posts.emptyHint"),
+  showOne: t(lang, "posts.showOne"),
+  showMany: t(lang, "posts.showMany"),
+  countOne: t(lang, "posts.countOne"),
+  countMany: t(lang, "posts.countMany"),
+  pagination: t(lang, "posts.pagination"),
+  previous: t(lang, "posts.previous"),
+  next: t(lang, "posts.next"),
+  previousPage: t(lang, "posts.previousPage"),
+  nextPage: t(lang, "posts.nextPage"),
+  removeFilter: t(lang, "posts.removeFilter"),
+  readSuffix: t(lang, "posts.readSuffix"),
 };
 
 const otherLang: Lang = languages.find((l) => l !== lang) ?? lang;
-const counterpartPath = localizedPath(otherLang, '/posts/');
+const counterpartPath = localizedPath(otherLang, "/posts/");
 
-const pageTitle = `${t(lang, 'archive.title')} · ${t(lang, 'meta.siteName')}`;
+const pageTitle = `${t(lang, "archive.title")} · ${t(lang, "meta.siteName")}`;
 ---
 
 <BaseLayout
   lang={lang}
   title={pageTitle}
-  description={t(lang, 'archive.summary', { n: posts.length })}
+  description={t(lang, "archive.summary", { n: posts.length })}
   counterpartPath={counterpartPath}
 >
   <section class="container pt-16 pb-10 sm:pt-20">
     <div class="border-b border-border pb-8">
-      <p class="text-sm text-muted-foreground">{t(lang, 'archive.kicker')}</p>
+      <p class="text-sm text-muted-foreground">{t(lang, "archive.kicker")}</p>
       <h1 class="mt-2 text-4xl font-semibold tracking-tight sm:text-5xl">
-        {t(lang, 'archive.title')}
+        {t(lang, "archive.title")}
       </h1>
       <p class="mt-3 max-w-xl text-base text-muted-foreground">
-        {t(lang, 'archive.summary', { n: posts.length })}
+        {t(lang, "archive.summary", { n: posts.length })}
       </p>
     </div>
   </section>

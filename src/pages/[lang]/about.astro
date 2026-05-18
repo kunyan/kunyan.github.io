@@ -1,11 +1,11 @@
 ---
-import type { GetStaticPaths } from 'astro';
-import { getEntry, render } from 'astro:content';
-import BaseLayout from '../../layouts/BaseLayout.astro';
-import { Icon } from 'astro-icon/components';
-import { languages, isLang, type Lang } from '../../i18n/config';
-import { t } from '../../i18n/ui';
-import { localizedPath } from '../../i18n/utils';
+import type { GetStaticPaths } from "astro";
+import { getEntry, render } from "astro:content";
+import BaseLayout from "../../layouts/BaseLayout.astro";
+import { Icon } from "astro-icon/components";
+import { languages, isLang, type Lang } from "../../i18n/config";
+import { t } from "../../i18n/ui";
+import { localizedPath } from "../../i18n/utils";
 
 export const getStaticPaths = (() =>
   languages.map((lang) => ({ params: { lang } }))) satisfies GetStaticPaths;
@@ -13,14 +13,14 @@ export const getStaticPaths = (() =>
 const lang = Astro.params.lang;
 if (!isLang(lang)) throw new Error(`Invalid lang param: ${lang}`);
 
-const entry = await getEntry('about', lang);
+const entry = await getEntry("about", lang);
 if (!entry) throw new Error(`Missing about content for ${lang}`);
 const { Content } = await render(entry);
 
 const otherLang: Lang = languages.find((l) => l !== lang) ?? lang;
-const counterpartPath = localizedPath(otherLang, '/about/');
+const counterpartPath = localizedPath(otherLang, "/about/");
 
-const pageTitle = `${t(lang, 'nav.about')} · ${t(lang, 'meta.siteName')}`;
+const pageTitle = `${t(lang, "nav.about")} · ${t(lang, "meta.siteName")}`;
 ---
 
 <BaseLayout
@@ -29,12 +29,14 @@ const pageTitle = `${t(lang, 'nav.about')} · ${t(lang, 'meta.siteName')}`;
   description={entry.data.intro}
   counterpartPath={counterpartPath}
 >
-  <article class="mx-auto w-full max-w-[1400px] px-5 pt-12 pb-24 sm:px-6 sm:pt-20 lg:px-10 lg:pt-24">
+  <article
+    class="mx-auto w-full max-w-350 px-5 pt-12 pb-24 sm:px-6 sm:pt-20 lg:px-10 lg:pt-24"
+  >
     <div
       class="lg:grid lg:grid-cols-[minmax(0,1fr)_240px] lg:gap-12 xl:grid-cols-[minmax(0,1fr)_260px] xl:gap-16"
     >
       <div class="mx-auto w-full max-w-[70ch] lg:mx-0 lg:max-w-none">
-        <p class="text-sm text-muted-foreground">{t(lang, 'nav.about')}</p>
+        <p class="text-sm text-muted-foreground">{t(lang, "nav.about")}</p>
         <h1
           class="mt-3 text-balance text-3xl font-semibold leading-[1.15] tracking-tight sm:mt-2 sm:text-4xl lg:text-5xl"
         >
@@ -61,7 +63,12 @@ const pageTitle = `${t(lang, 'nav.about')} · ${t(lang, 'meta.siteName')}`;
             rel="noopener noreferrer"
             class="inline-flex h-11 min-w-0 items-center gap-2 rounded-md border border-border bg-background px-4 text-sm font-medium transition-colors hover:bg-accent hover:text-accent-foreground sm:h-10"
           >
-            <Icon name="lucide:github" width={15} height={15} class="shrink-0" />
+            <Icon
+              name="lucide:github"
+              width={15}
+              height={15}
+              class="shrink-0"
+            />
             <span>GitHub</span>
           </a>
           <a
@@ -73,7 +80,7 @@ const pageTitle = `${t(lang, 'nav.about')} · ${t(lang, 'meta.siteName')}`;
             <span>Strava</span>
           </a>
           <a
-            href={localizedPath(lang, '/rss.xml')}
+            href={localizedPath(lang, "/rss.xml")}
             class="inline-flex h-11 min-w-0 items-center gap-2 rounded-md border border-border bg-background px-4 text-sm font-medium transition-colors hover:bg-accent hover:text-accent-foreground sm:h-10"
           >
             <Icon name="lucide:rss" width={15} height={15} class="shrink-0" />

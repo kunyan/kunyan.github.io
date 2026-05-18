@@ -1,5 +1,5 @@
 ---
-import { languages, defaultLang } from '../i18n/config';
+import { languages, defaultLang } from "../i18n/config";
 const langsJson = JSON.stringify(languages);
 const defJson = JSON.stringify(defaultLang);
 ---
@@ -18,27 +18,30 @@ const defJson = JSON.stringify(defaultLang);
     <script is:inline define:vars={{ langs: languages, def: defaultLang }}>
       (function () {
         try {
-          var saved = localStorage.getItem('preferredLang');
+          var saved = localStorage.getItem("preferredLang");
           var chosen = langs.indexOf(saved) >= 0 ? saved : null;
 
           if (!chosen) {
-            var list = navigator.languages && navigator.languages.length
-              ? navigator.languages
-              : [navigator.language || ''];
+            var list =
+              navigator.languages && navigator.languages.length
+                ? navigator.languages
+                : [navigator.language || ""];
             for (var i = 0; i < list.length && !chosen; i++) {
               var tag = String(list[i]).toLowerCase();
               for (var j = 0; j < langs.length && !chosen; j++) {
-                if (tag === langs[j] || tag.indexOf(langs[j] + '-') === 0) {
+                if (tag === langs[j] || tag.indexOf(langs[j] + "-") === 0) {
                   chosen = langs[j];
                 }
               }
             }
             if (!chosen) chosen = def;
-            try { localStorage.setItem('preferredLang', chosen); } catch (e) {}
+            try {
+              localStorage.setItem("preferredLang", chosen);
+            } catch (e) {}
           }
-          window.location.replace('/' + chosen + '/');
+          window.location.replace("/" + chosen + "/");
         } catch (e) {
-          window.location.replace('/' + def + '/');
+          window.location.replace("/" + def + "/");
         }
       })();
     </script>

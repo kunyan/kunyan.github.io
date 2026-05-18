@@ -1,6 +1,6 @@
 ---
-import { heroTitleSegments, heroTitleBreakAfter, t } from '../i18n/ui';
-import { defaultLang, type Lang } from '../i18n/config';
+import { heroTitleSegments, heroTitleBreakAfter, t } from "../i18n/ui";
+import { defaultLang, type Lang } from "../i18n/config";
 
 interface Props {
   lang: Lang;
@@ -15,8 +15,8 @@ const breakAfter = heroTitleBreakAfter[lang];
 const WORD_BASE_DELAY = 200;
 const WORD_STEP = 55;
 const subtitleDelay = WORD_BASE_DELAY + segments.length * WORD_STEP;
-const newPostLabel = t(lang, 'hero.newPost');
-const subtitle = t(lang, 'hero.subtitle');
+const newPostLabel = t(lang, "hero.newPost");
+const subtitle = t(lang, "hero.subtitle");
 ---
 
 <section class="relative overflow-hidden">
@@ -52,7 +52,7 @@ const subtitle = t(lang, 'hero.subtitle');
             >
               {word}
             </span>
-            {i === breakAfter - 1 ? <br class="hidden sm:block" /> : ' '}
+            {i === breakAfter - 1 ? <br class="hidden sm:block" /> : " "}
           </>
         ))
       }

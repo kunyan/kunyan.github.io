@@ -1,16 +1,16 @@
 ---
-import type { GetStaticPaths } from 'astro';
-import { Image, getImage } from 'astro:assets';
-import { getCollection, render } from 'astro:content';
-import BaseLayout from '../../../layouts/BaseLayout.astro';
-import Toc from '../../../components/react/Toc.tsx';
-import BackToTop from '../../../components/react/BackToTop.tsx';
-import Comments from '../../../components/Comments.astro';
-import { Icon } from 'astro-icon/components';
-import { resolveCover } from '../../../lib/covers';
-import { isConfigured as giscusConfigured } from '../../../lib/giscus';
-import { languages, type Lang, isLang } from '../../../i18n/config';
-import { t } from '../../../i18n/ui';
+import type { GetStaticPaths } from "astro";
+import { Image, getImage } from "astro:assets";
+import { getCollection, render } from "astro:content";
+import BaseLayout from "../../../layouts/BaseLayout.astro";
+import Toc from "../../../components/react/Toc.tsx";
+import BackToTop from "../../../components/react/BackToTop.tsx";
+import Comments from "../../../components/Comments.astro";
+import { Icon } from "astro-icon/components";
+import { resolveCover } from "../../../lib/covers";
+import { isConfigured as giscusConfigured } from "../../../lib/giscus";
+import { languages, type Lang, isLang } from "../../../i18n/config";
+import { t } from "../../../i18n/ui";
 import {
   formatDate,
   getCounterpart,
@@ -20,10 +20,10 @@ import {
   postLang,
   postSlug,
   type PostEntry,
-} from '../../../i18n/utils';
+} from "../../../i18n/utils";
 
 export const getStaticPaths = (async () => {
-  const posts = await getCollection('posts', ({ data }) => !data.draft);
+  const posts = await getCollection("posts", ({ data }) => !data.draft);
   return posts.map((post) => ({
     params: { lang: postLang(post), slug: postSlug(post) },
     props: { post },
@@ -44,32 +44,35 @@ const cover = resolveCover(post.data.cover);
 const sameLangPosts = await getPostsByLang(lang);
 const idx = sameLangPosts.findIndex((p) => p.id === post.id);
 const prev = idx > 0 ? sameLangPosts[idx - 1] : null;
-const next = idx >= 0 && idx < sameLangPosts.length - 1 ? sameLangPosts[idx + 1] : null;
+const next =
+  idx >= 0 && idx < sameLangPosts.length - 1 ? sameLangPosts[idx + 1] : null;
 
 const otherLang: Lang = languages.find((l) => l !== lang) ?? lang;
 const counterpart = await getCounterpart(post, otherLang);
 const counterpartPath = counterpart ? postHref(counterpart) : null;
 
-const pageTitle = `${post.data.title} · ${t(lang, 'meta.siteName')}`;
+const pageTitle = `${post.data.title} · ${t(lang, "meta.siteName")}`;
 
 // Warm Giscus + GitHub API connections only when this post will actually render comments.
 const commentsRender = post.data.comments !== false && giscusConfigured();
-const preconnect = commentsRender ? ['https://giscus.app', 'https://api.github.com'] : [];
+const preconnect = commentsRender
+  ? ["https://giscus.app", "https://api.github.com"]
+  : [];
 
 // Pre-resolve a 1200×630 OG image (Open Graph / Twitter Card standard) from the cover.
-const ogVariant = await getImage({ src: cover, width: 1200, format: 'webp' });
+const ogVariant = await getImage({ src: cover, width: 1200, format: "webp" });
 const ogImage = new URL(ogVariant.src, Astro.site).toString();
 
 // Schema.org BlogPosting JSON-LD — gives Google enough to render a rich result.
 const canonicalURL = new URL(Astro.url.pathname, Astro.site).toString();
 const author = {
-  '@type': 'Person',
-  name: 'Kun Yan',
-  url: Astro.site?.toString() ?? 'https://yankun.org/',
+  "@type": "Person",
+  name: "Kun Yan",
+  url: Astro.site?.toString() ?? "https://yankun.org/",
 };
 const articleSchema = {
-  '@context': 'https://schema.org',
-  '@type': 'BlogPosting',
+  "@context": "https://schema.org",
+  "@type": "BlogPosting",
   headline: post.data.title,
   description: post.data.excerpt,
   image: ogImage,
@@ -77,9 +80,9 @@ const articleSchema = {
   dateModified: post.data.date.toISOString(),
   author,
   publisher: author,
-  mainEntityOfPage: { '@type': 'WebPage', '@id': canonicalURL },
-  inLanguage: lang === 'zh' ? 'zh-CN' : 'en-US',
-  keywords: post.data.tags.join(', '),
+  mainEntityOfPage: { "@type": "WebPage", "@id": canonicalURL },
+  inLanguage: lang === "zh" ? "zh-CN" : "en-US",
+  keywords: post.data.tags.join(", "),
 };
 ---
 
@@ -96,21 +99,27 @@ const articleSchema = {
   jsonLd={articleSchema}
 >
   <article class="mx-auto w-full max-w-350 px-6 pt-12 pb-24 lg:px-10">
-    <div class="lg:grid lg:grid-cols-[minmax(0,1fr)_240px] lg:gap-12 xl:grid-cols-[minmax(0,1fr)_260px] xl:gap-16">
+    <div
+      class="lg:grid lg:grid-cols-[minmax(0,1fr)_240px] lg:gap-12 xl:grid-cols-[minmax(0,1fr)_260px] xl:gap-16"
+    >
       <div class="mx-auto w-full max-w-[70ch] lg:mx-0 lg:max-w-none">
         <a
           href={`/${lang}/posts/`}
           class="mb-8 inline-flex items-center gap-1.5 text-sm text-muted-foreground transition-colors hover:text-foreground"
         >
           <Icon name="lucide:arrow-left" width={14} height={14} />
-          {t(lang, 'post.backToAll')}
+          {t(lang, "post.backToAll")}
         </a>
 
-        <h1 class="text-balance text-4xl font-semibold leading-[1.1] tracking-tight sm:text-5xl">
+        <h1
+          class="text-balance text-4xl font-semibold leading-[1.1] tracking-tight sm:text-5xl"
+        >
           {post.data.title}
         </h1>
 
-        <div class="mt-6 flex flex-wrap items-center gap-x-3 gap-y-2 text-sm text-muted-foreground">
+        <div
+          class="mt-6 flex flex-wrap items-center gap-x-3 gap-y-2 text-sm text-muted-foreground"
+        >
           <span class="inline-flex items-center gap-1.5">
             <Icon name="lucide:calendar" width={14} height={14} />
             <time datetime={post.data.date.toISOString()}>
@@ -120,7 +129,8 @@ const articleSchema = {
           <span aria-hidden="true">·</span>
           <span class="inline-flex items-center gap-1.5">
             <Icon name="lucide:clock" width={14} height={14} />
-            {getReadingTime(post)} {t(lang, 'posts.readSuffix')}
+            {getReadingTime(post)}
+            {t(lang, "posts.readSuffix")}
           </span>
           <span aria-hidden="true">·</span>
           <span class="flex flex-wrap gap-1.5">
@@ -134,7 +144,9 @@ const articleSchema = {
           </span>
         </div>
 
-        <figure class="mt-10 overflow-hidden rounded-lg border border-border bg-muted">
+        <figure
+          class="mt-10 overflow-hidden rounded-lg border border-border bg-muted"
+        >
           <Image
             src={cover}
             alt=""
@@ -145,7 +157,9 @@ const articleSchema = {
           />
         </figure>
 
-        <p class="mt-10 text-balance text-xl leading-relaxed text-muted-foreground">
+        <p
+          class="mt-10 text-balance text-xl leading-relaxed text-muted-foreground"
+        >
           {post.data.excerpt}
         </p>
 
@@ -155,7 +169,9 @@ const articleSchema = {
           <Content />
         </div>
 
-        <nav class="mt-20 grid grid-cols-1 gap-4 border-t border-border pt-10 sm:grid-cols-2">
+        <nav
+          class="mt-20 grid grid-cols-1 gap-4 border-t border-border pt-10 sm:grid-cols-2"
+        >
           {
             prev ? (
               <a
@@ -164,7 +180,7 @@ const articleSchema = {
               >
                 <span class="inline-flex items-center gap-1 text-xs text-muted-foreground">
                   <Icon name="lucide:arrow-left" width={12} height={12} />
-                  {t(lang, 'post.previous')}
+                  {t(lang, "post.previous")}
                 </span>
                 <span class="line-clamp-2 text-sm font-medium tracking-tight">
                   {prev.data.title}
@@ -181,7 +197,7 @@ const articleSchema = {
                 class="group flex flex-col gap-1 rounded-lg border border-border p-4 text-right transition-colors hover:bg-accent"
               >
                 <span class="inline-flex items-center justify-end gap-1 text-xs text-muted-foreground">
-                  {t(lang, 'post.next')}
+                  {t(lang, "post.next")}
                   <Icon name="lucide:arrow-right" width={12} height={12} />
                 </span>
                 <span class="line-clamp-2 text-sm font-medium tracking-tight">
@@ -198,7 +214,7 @@ const articleSchema = {
           post.data.comments !== false && (
             <section class="mt-20 border-t border-border pt-10">
               <h2 class="mb-6 text-base font-semibold tracking-tight">
-                {t(lang, 'post.comments')}
+                {t(lang, "post.comments")}
               </h2>
               <Comments lang={lang} />
             </section>
@@ -208,11 +224,11 @@ const articleSchema = {
 
       <aside class="hidden lg:block">
         <div class="sticky top-24">
-          <Toc client:load headings={headings} label={t(lang, 'post.toc')} />
+          <Toc client:load headings={headings} label={t(lang, "post.toc")} />
         </div>
       </aside>
     </div>
   </article>
 
-  <BackToTop client:load label={t(lang, 'post.backToTop')} />
+  <BackToTop client:load label={t(lang, "post.backToTop")} />
 </BaseLayout>
