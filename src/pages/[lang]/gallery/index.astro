@@ -1,0 +1,40 @@
+---
+import type { GetStaticPaths } from "astro";
+import { getCollection } from "astro:content";
+import BaseLayout from "../../../layouts/BaseLayout.astro";
+import GalleryHero from "../../../components/gallery/GalleryHero.astro";
+import GalleryTagFilter from "../../../components/gallery/GalleryTagFilter.astro";
+import GalleryGrid from "../../../components/gallery/GalleryGrid.astro";
+import GalleryLightbox from "../../../components/gallery/GalleryLightbox.astro";
+import { languages, type Lang, isLang } from "../../../i18n/config";
+import { t } from "../../../i18n/ui";
+import { localizedPath } from "../../../i18n/utils";
+
+export const getStaticPaths = (() =>
+  languages.map((lang) => ({ params: { lang } }))) satisfies GetStaticPaths;
+
+const lang = Astro.params.lang;
+if (!isLang(lang)) throw new Error(`Invalid lang param: ${lang}`);
+
+const photos = (await getCollection("gallery")).sort(
+  (a, b) => +b.data.date - +a.data.date,
+);
+
+const otherLang: Lang = languages.find((l) => l !== lang) ?? lang;
+const counterpartPath = localizedPath(otherLang, "/gallery/");
+
+const title = `${t(lang, "gallery.title")} — ${t(lang, "meta.siteName")}`;
+const description = t(lang, "gallery.subtitle");
+---
+
+<BaseLayout
+  lang={lang}
+  title={title}
+  description={description}
+  counterpartPath={counterpartPath}
+>
+  <GalleryHero lang={lang} photos={photos} />
+  <GalleryTagFilter lang={lang} photos={photos} />
+  <GalleryGrid lang={lang} photos={photos} />
+  <GalleryLightbox lang={lang} photos={photos} />
+</BaseLayout>
