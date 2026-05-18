@@ -1,0 +1,72 @@
+---
+import type { CollectionEntry } from "astro:content";
+import { t } from "../../i18n/ui";
+import type { Lang } from "../../i18n/config";
+
+interface Props {
+  lang: Lang;
+  photos: CollectionEntry<"gallery">[];
+}
+
+const { lang, photos } = Astro.props;
+
+const tags = Array.from(
+  new Set(photos.flatMap((p) => p.data.tags)),
+).sort();
+
+const chips = [
+  { value: "all", label: t(lang, "gallery.tagAll") },
+  ...tags.map((tag) => ({ value: tag, label: tag })),
+];
+---
+
+{
+  chips.length > 1 && (
+    <nav
+      id="gallery-tag-filter"
+      class="container mb-8 flex flex-wrap gap-2"
+      aria-label="Photo tags"
+    >
+      {chips.map((c) => (
+        <button
+          type="button"
+          class="gallery-chip rounded-full border border-border px-3 py-1 text-sm text-muted-foreground transition-colors hover:text-foreground data-[active=true]:border-foreground data-[active=true]:bg-foreground data-[active=true]:text-background"
+          data-tag={c.value}
+          data-active={c.value === "all" ? "true" : "false"}
+        >
+          {c.label}
+        </button>
+      ))}
+    </nav>
+  )
+}
+
+<script is:inline>
+  (function () {
+    function init() {
+      const nav = document.getElementById("gallery-tag-filter");
+      const grid = document.getElementById("gallery-grid");
+      if (!nav || !grid) return;
+
+      nav.addEventListener("click", (event) => {
+        const target = event.target;
+        if (!(target instanceof HTMLElement)) return;
+        const chip = target.closest(".gallery-chip");
+        if (!chip) return;
+
+        const tag = chip.getAttribute("data-tag") || "all";
+        for (const c of nav.querySelectorAll(".gallery-chip")) {
+          c.setAttribute("data-active", c === chip ? "true" : "false");
+        }
+        grid.setAttribute("data-active-tag", tag);
+        grid.dispatchEvent(new CustomEvent("gallery:tag-changed"));
+      });
+    }
+
+    if (document.readyState === "loading") {
+      document.addEventListener("DOMContentLoaded", init, { once: true });
+    } else {
+      init();
+    }
+  })();
+</script>

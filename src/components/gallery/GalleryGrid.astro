@@ -1,0 +1,85 @@
+---
+import type { CollectionEntry } from "astro:content";
+import GalleryItem from "./GalleryItem.astro";
+import { t } from "../../i18n/ui";
+import type { Lang } from "../../i18n/config";
+
+interface Props {
+  lang: Lang;
+  photos: CollectionEntry<"gallery">[];
+}
+
+const { lang, photos } = Astro.props;
+---
+
+<div class="container pb-24">
+  <div
+    id="gallery-grid"
+    class="gallery-grid"
+    data-active-tag="all"
+  >
+    {photos.map((p) => <GalleryItem photo={p} />)}
+  </div>
+  <p id="gallery-empty" class="mt-8 hidden text-center text-muted-foreground">
+    {t(lang, "gallery.empty")}
+  </p>
+</div>
+
+<style>
+  /* Pinterest-style masonry via CSS multi-columns.
+     Reading order is column-first (top-to-bottom in col 1, then col 2),
+     which differs from algorithmic masonry but is visually identical and
+     needs zero JS layout. */
+  .gallery-grid {
+    column-count: 2;
+    column-gap: 12px;
+  }
+  @media (min-width: 768px) {
+    .gallery-grid { column-count: 3; }
+  }
+  @media (min-width: 1280px) {
+    .gallery-grid { column-count: 4; }
+  }
+
+  /* :global() because .gallery-item is rendered by a child component
+     (GalleryItem.astro), which has its own scope id — without :global()
+     this rule never matches. */
+  :global(.gallery-item) {
+    break-inside: avoid;
+    margin-bottom: 12px;
+    cursor: zoom-in;
+  }
+</style>
+
+<script is:inline>
+  // Filter items whose data-tags contains the active tag. Pure DOM, no framework.
+  (function () {
+    function init() {
+      const grid = document.getElementById("gallery-grid");
+      const empty = document.getElementById("gallery-empty");
+      if (!grid) return;
+
+      function apply() {
+        const tag = grid.getAttribute("data-active-tag") || "all";
+        const items = Array.from(grid.querySelectorAll(".gallery-item"));
+        let visible = 0;
+        for (const el of items) {
+          const tags = (el.getAttribute("data-tags") || "").split(/\s+/);
+          const show = tag === "all" || tags.includes(tag);
+          el.style.display = show ? "" : "none";
+          if (show) visible++;
+        }
+        if (empty) empty.classList.toggle("hidden", visible > 0);
+      }
+
+      grid.addEventListener("gallery:tag-changed", apply);
+      apply();
+    }
+
+    if (document.readyState === "loading") {
+      document.addEventListener("DOMContentLoaded", init, { once: true });
+    } else {
+      init();
+    }
+  })();
+</script>

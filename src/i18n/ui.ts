@@ -8,6 +8,7 @@ const en = {
   'nav.about': 'About',
   'nav.rss': 'RSS feed',
   'nav.github': 'GitHub',
+  'nav.gallery': 'Gallery',
   'nav.openMenu': 'Open menu',
   'nav.closeMenu': 'Close menu',
   'nav.language': 'Language',
@@ -26,6 +27,19 @@ const en = {
 
   // home
   'home.viewAll': 'View all {n} posts',
+
+  // gallery
+  'gallery.title': 'Gallery',
+  'gallery.subtitle': 'A visual journal of moments worth pausing for.',
+  'gallery.countOne': '{n} photo',
+  'gallery.countMany': '{n} photos',
+  'gallery.dateRangeSingle': '{year}',
+  'gallery.dateRangeSpan': '{start} — {end}',
+  'gallery.tagAll': 'All',
+  'gallery.empty': 'No photos match this filter.',
+  'gallery.closeLightbox': 'Close',
+  'gallery.prevPhoto': 'Previous photo',
+  'gallery.nextPhoto': 'Next photo',
 
   // archive header
   'archive.kicker': 'The archive',
@@ -103,6 +117,7 @@ const zh: Record<UIKey, string> = {
   'nav.about': '关于',
   'nav.rss': 'RSS 订阅',
   'nav.github': 'GitHub',
+  'nav.gallery': '影像',
   'nav.openMenu': '打开菜单',
   'nav.closeMenu': '关闭菜单',
   'nav.language': '语言',
@@ -118,6 +133,18 @@ const zh: Record<UIKey, string> = {
   'hero.subtitle': '关于软件工程、工具与构建之事的随笔笔记。',
 
   'home.viewAll': '查看全部 {n} 篇文章',
+
+  'gallery.title': '影像',
+  'gallery.subtitle': '一些值得停下来的瞬间。',
+  'gallery.countOne': '{n} 张',
+  'gallery.countMany': '{n} 张',
+  'gallery.dateRangeSingle': '{year}',
+  'gallery.dateRangeSpan': '{start} — {end}',
+  'gallery.tagAll': '全部',
+  'gallery.empty': '没有匹配的照片。',
+  'gallery.closeLightbox': '关闭',
+  'gallery.prevPhoto': '上一张',
+  'gallery.nextPhoto': '下一张',
 
   'archive.kicker': '文章档案',
   'archive.title': '全部文章',

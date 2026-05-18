@@ -1,0 +1,52 @@
+---
+import type { CollectionEntry } from "astro:content";
+import { t } from "../../i18n/ui";
+import { pluralKey } from "../../i18n/utils";
+import type { Lang } from "../../i18n/config";
+
+interface Props {
+  lang: Lang;
+  photos: CollectionEntry<"gallery">[];
+}
+
+const { lang, photos } = Astro.props;
+
+const count = photos.length;
+const countKey = pluralKey("gallery.count", count);
+
+const sorted = [...photos].sort((a, b) => +a.data.date - +b.data.date);
+const earliest = sorted[0]?.data.date;
+const latest = sorted[sorted.length - 1]?.data.date;
+
+let dateRange = "";
+if (earliest && latest) {
+  const sy = earliest.getFullYear();
+  const ey = latest.getFullYear();
+  dateRange =
+    sy === ey
+      ? t(lang, "gallery.dateRangeSingle", { year: sy })
+      : t(lang, "gallery.dateRangeSpan", { start: sy, end: ey });
+}
+---
+
+<section class="container pt-16 pb-8 lg:pt-24 lg:pb-12">
+  <h1 class="text-4xl font-semibold tracking-tight text-foreground lg:text-5xl">
+    {t(lang, "gallery.title")}
+  </h1>
+  <p class="mt-4 max-w-prose text-lg text-muted-foreground">
+    {t(lang, "gallery.subtitle")}
+  </p>
+  {
+    count > 0 && (
+      <p class="mt-6 text-sm text-muted-foreground">
+        <span>{t(lang, countKey, { n: count })}</span>
+        {dateRange && (
+          <>
+            <span aria-hidden="true"> · </span>
+            <span>{dateRange}</span>
+          </>
+        )}
+      </p>
+    )
+  }
+</section>

@@ -30,4 +30,18 @@ const about = defineCollection({
   }),
 });
 
-export const collections = { posts, about };
+// Photography entries; one frontmatter file per photo, image binaries in src/assets/gallery/.
+const gallery = defineCollection({
+  loader: glob({ pattern: '*.md', base: './src/content/gallery' }),
+  schema: z.object({
+    title: z.string(),
+    caption: z.string().optional(),
+    date: z.coerce.date(),
+    location: z.string().optional(),
+    tags: z.array(z.string()).default([]),
+    // Basename under src/assets/gallery/, e.g. "sunset-suzhou.jpg".
+    image: z.string(),
+  }),
+});
+
+export const collections = { posts, about, gallery };

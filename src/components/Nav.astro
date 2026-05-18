@@ -21,6 +21,7 @@ const pathname = Astro.url.pathname.replace(/\/$/, "") || "/";
 const links = [
   { label: t(lang, "nav.home"), href: localizedPath(lang, "/") },
   { label: t(lang, "nav.posts"), href: localizedPath(lang, "/posts/") },
+  { label: t(lang, "nav.gallery"), href: localizedPath(lang, "/gallery/") },
   { label: t(lang, "nav.about"), href: localizedPath(lang, "/about/") },
 ];
 
