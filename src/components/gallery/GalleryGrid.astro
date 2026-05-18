@@ -26,23 +26,28 @@ const { lang, photos } = Astro.props;
 </div>
 
 <style>
+  /* Pinterest-style masonry via CSS multi-columns.
+     Reading order is column-first (top-to-bottom in col 1, then col 2),
+     which differs from algorithmic masonry but is visually identical and
+     needs zero JS layout. */
   .gallery-grid {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 6px;
+    column-count: 2;
+    column-gap: 12px;
   }
-  .gallery-item {
-    height: 280px;
-    flex-grow: var(--ar);
-    flex-basis: calc(var(--ar) * 280px);
-    min-width: 0;
+  @media (min-width: 768px) {
+    .gallery-grid { column-count: 3; }
+  }
+  @media (min-width: 1280px) {
+    .gallery-grid { column-count: 4; }
+  }
+
+  /* :global() because .gallery-item is rendered by a child component
+     (GalleryItem.astro), which has its own scope id — without :global()
+     this rule never matches. */
+  :global(.gallery-item) {
+    break-inside: avoid;
+    margin-bottom: 12px;
     cursor: zoom-in;
-  }
-  @media (max-width: 640px) {
-    .gallery-item {
-      height: 180px;
-      flex-basis: calc(var(--ar) * 180px);
-    }
   }
 </style>
 
