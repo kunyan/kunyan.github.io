@@ -66,7 +66,11 @@ This is worth thinking through *before* you sign up.
 
 A counterintuitive one to end on: among the structured instrument-learning paths, **piano is on the cheaper end**.
 
-Three reasons: lots of people learn it, so there are plenty of teachers and the market is competitive; you rarely need to "upgrade" the instrument, so one good piano can last the whole journey; and the price range of the instrument itself is wide — there's something for every budget.
+Three reasons: 
+
+1. Lots of people learn it, so there are plenty of teachers and the market is competitive;
+2. You rarely need to "upgrade" the instrument, so one good piano can last the whole journey;
+3. The price range of the instrument itself is wide — there's something for every budget.
 
 If your kid picks a niche instrument, fees go up and teachers are harder to find. Even instruments that already have a sizable learning population — violin, cello, the wind family — work out more expensive than piano when you add it all up.
 
