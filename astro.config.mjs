@@ -16,10 +16,10 @@ export default defineConfig({
     icon(),
     sitemap({
       i18n: {
-        defaultLocale: 'en',
-        locales: { en: 'en', zh: 'zh-Hans' },
+        defaultLocale: 'zh',
+        locales: { zh: 'zh-CN', en: 'en' },
       },
-      // Skip the root redirect, 404, and the RSS endpoints (RSS isn't a page).
+      // Skip the unprefixed root (its canonical is /zh/), 404, and RSS endpoints.
       filter: (page) => {
         const path = new URL(page).pathname;
         if (path === '/' || path === '/404' || path === '/404/') return false;

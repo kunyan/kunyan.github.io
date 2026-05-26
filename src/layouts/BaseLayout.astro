@@ -18,6 +18,8 @@ interface Props {
   description?: string;
   /** Path of the same page in the other language, e.g. "/zh/posts/foo/". null if no translation. */
   counterpartPath?: string | null;
+  /** Override canonical path. Defaults to Astro.url.pathname. Used by `/` to canonicalize to `/zh/`. */
+  canonicalPath?: string;
   /** Origins to preconnect to (warms DNS+TCP+TLS). Use sparingly — only on pages that genuinely need them. */
   preconnect?: string[];
   /** Absolute URL of an image used for og:image / twitter:image. */
@@ -36,6 +38,7 @@ interface Props {
 const {
   lang = defaultLang,
   counterpartPath,
+  canonicalPath,
   preconnect = [],
   ogImage,
   ogType = "website",
@@ -55,7 +58,10 @@ const htmlLang = languageMeta[lang].htmlLang;
 const siteName = t(lang, "meta.siteName");
 
 // Canonical URL — always absolute, drops trailing query/hash, normalizes trailing slash.
-const canonicalURL = new URL(Astro.url.pathname, Astro.site).toString();
+const canonicalURL = new URL(
+  canonicalPath ?? Astro.url.pathname,
+  Astro.site,
+).toString();
 
 // hreflang: emit the current language's URL plus the counterpart's (if it exists).
 // x-default points at the English (default) URL so search engines have a fallback.

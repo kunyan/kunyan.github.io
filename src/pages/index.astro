@@ -1,50 +1,54 @@
 ---
-import { languages, defaultLang } from "../i18n/config";
-const langsJson = JSON.stringify(languages);
-const defJson = JSON.stringify(defaultLang);
+import BaseLayout from "../layouts/BaseLayout.astro";
+import Hero from "../components/Hero.astro";
+import PostCard from "../components/PostCard.astro";
+import { Icon } from "astro-icon/components";
+import { t } from "../i18n/ui";
+import { getPostsByLang, localizedPath } from "../i18n/utils";
+
+// `/` serves the Chinese homepage directly (default language).
+// Canonical points to `/zh/` so search engines treat /zh/ as the authoritative URL
+// while visitors hitting the root still see content immediately.
+const lang = "zh" as const;
+const posts = await getPostsByLang(lang);
+const recent = posts.slice(0, 3);
+const newest = posts[0];
+
+const counterpartPath = localizedPath("en", "/");
+const canonicalPath = localizedPath(lang, "/");
 ---
 
-<!doctype html>
-<html lang="en">
-  <head>
-    <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title>Kun's Notes</title>
-    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
-    <meta name="robots" content="noindex" />
-    <!-- Fallback: if JS is disabled, send everyone to the default-language home -->
-    <meta http-equiv="refresh" content={`0; url=/${defaultLang}/`} />
-    <link rel="canonical" href={`/${defaultLang}/`} />
-    <script is:inline define:vars={{ langs: languages, def: defaultLang }}>
-      (function () {
-        try {
-          var saved = localStorage.getItem("preferredLang");
-          var chosen = langs.indexOf(saved) >= 0 ? saved : null;
+<BaseLayout
+  lang={lang}
+  counterpartPath={counterpartPath}
+  canonicalPath={canonicalPath}
+>
+  <Hero lang={lang} newestTitle={newest?.data.title} />
 
-          if (!chosen) {
-            var list =
-              navigator.languages && navigator.languages.length
-                ? navigator.languages
-                : [navigator.language || ""];
-            for (var i = 0; i < list.length && !chosen; i++) {
-              var tag = String(list[i]).toLowerCase();
-              for (var j = 0; j < langs.length && !chosen; j++) {
-                if (tag === langs[j] || tag.indexOf(langs[j] + "-") === 0) {
-                  chosen = langs[j];
-                }
-              }
-            }
-            if (!chosen) chosen = def;
-            try {
-              localStorage.setItem("preferredLang", chosen);
-            } catch (e) {}
-          }
-          window.location.replace("/" + chosen + "/");
-        } catch (e) {
-          window.location.replace("/" + def + "/");
-        }
-      })();
-    </script>
-  </head>
-  <body></body>
-</html>
+  <section class="container pb-24 pt-4">
+    <div
+      class="grid grid-cols-1 gap-x-6 gap-y-10 sm:grid-cols-2 lg:grid-cols-3"
+    >
+      {recent.map((p) => <PostCard post={p} lang={lang} />)}
+    </div>
+
+    {
+      posts.length > 0 && (
+        <div class="mt-16 flex justify-center">
+          <a
+            href={localizedPath(lang, "/posts/")}
+            class="group inline-flex h-11 items-center justify-center gap-2 whitespace-nowrap rounded-md bg-primary px-6 text-sm font-medium text-primary-foreground transition-colors hover:bg-primary/90"
+          >
+            {t(lang, "home.viewAll", { n: posts.length })}
+            <Icon
+              name="lucide:arrow-right"
+              width={16}
+              height={16}
+              class="transition-transform duration-200 group-hover:translate-x-0.5"
+            />
+          </a>
+        </div>
+      )
+    }
+  </section>
+</BaseLayout>

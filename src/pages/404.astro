@@ -2,7 +2,6 @@
 import { defaultLang } from "../i18n/config";
 import { t } from "../i18n/ui";
 
-// Use the default language for the 404 page since we don't know which lang the visitor wanted.
 const lang = defaultLang;
 ---
 
@@ -46,7 +45,7 @@ const lang = defaultLang;
         {t(lang, "404.hint")}
       </p>
       <a
-        href={`/${defaultLang}/`}
+        href="/"
         class="mt-8 inline-flex h-10 items-center justify-center rounded-md bg-primary px-5 text-sm font-medium text-primary-foreground transition-colors hover:bg-primary/90"
       >
         {t(lang, "404.cta")}
