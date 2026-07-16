@@ -35,7 +35,7 @@ export default function MobileMenu({ links, pathname, labels }: Props) {
 
   const isActive = (href: string) => {
     const target = href.replace(/\/$/, '') || '/';
-    return pathname === target || pathname.startsWith(target + '/');
+    return pathname === target || pathname.startsWith(`${target}/`);
   };
 
   return (

@@ -11,12 +11,14 @@ export async function GET(context: APIContext) {
   const lang = context.params.lang;
   if (!isLang(lang)) throw new Error(`Invalid lang param: ${lang}`);
 
+  if (!context.site) throw new Error('context.site is not set');
+
   const posts = await getPostsByLang(lang);
 
   return rss({
     title: t(lang, 'meta.siteName'),
     description: t(lang, 'meta.description'),
-    site: context.site!,
+    site: context.site,
     items: posts.map((post) => ({
       title: post.data.title,
       description: post.data.excerpt,
