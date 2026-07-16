@@ -42,7 +42,9 @@ export default function Toc({ headings, label }: Props) {
       rootMargin: '0px 0px -60% 0px',
       threshold: [0, 1],
     });
-    elements.forEach((el) => observer.observe(el));
+    elements.forEach((el) => {
+      observer.observe(el);
+    });
 
     window.addEventListener('scroll', compute, { passive: true });
     compute();

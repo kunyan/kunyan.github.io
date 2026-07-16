@@ -4,6 +4,7 @@ import tailwindcss from '@tailwindcss/vite';
 
 import react from '@astrojs/react';
 import mdx from '@astrojs/mdx';
+import { satteri } from '@astrojs/markdown-satteri';
 import icon from 'astro-icon';
 import sitemap from '@astrojs/sitemap';
 
@@ -32,6 +33,13 @@ export default defineConfig({
     plugins: [tailwindcss()],
   },
   markdown: {
+    processor: satteri({
+      features: {
+        directive: true,
+        math: true,
+        headingAttributes: true,
+      },
+    }),
     shikiConfig: {
       themes: { light: 'github-light', dark: 'github-dark' },
     },

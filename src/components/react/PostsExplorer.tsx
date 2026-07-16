@@ -109,9 +109,9 @@ function applyFilters({
   if (sort === 'newest') list.sort((a, b) => +new Date(b.date) - +new Date(a.date));
   else if (sort === 'oldest') list.sort((a, b) => +new Date(a.date) - +new Date(b.date));
   else if (sort === 'shortest')
-    list.sort((a, b) => parseInt(a.readingTime) - parseInt(b.readingTime));
+    list.sort((a, b) => parseInt(a.readingTime, 10) - parseInt(b.readingTime, 10));
   else if (sort === 'longest')
-    list.sort((a, b) => parseInt(b.readingTime) - parseInt(a.readingTime));
+    list.sort((a, b) => parseInt(b.readingTime, 10) - parseInt(a.readingTime, 10));
   return list;
 }
 
@@ -257,9 +257,8 @@ export default function PostsExplorer({ posts, allTags, today, locale, strings }
           </div>
 
           <div className="flex items-center gap-2">
-            <div
-              role="group"
-              aria-label={strings.galleryView + ' / ' + strings.listView}
+            <fieldset
+              aria-label={`${strings.galleryView} / ${strings.listView}`}
               className="inline-flex h-9 items-center rounded-md border border-border bg-background p-0.5"
             >
               <ViewButton
@@ -276,7 +275,7 @@ export default function PostsExplorer({ posts, allTags, today, locale, strings }
               >
                 <Icon icon="lucide:list" width={15} height={15} />
               </ViewButton>
-            </div>
+            </fieldset>
 
             <div className="relative">
               <select
@@ -550,8 +549,11 @@ function FilterDrawer({
       )}
       aria-hidden={!open}
     >
-      <div
+      <button
+        type="button"
         onClick={onClose}
+        aria-hidden="true"
+        tabIndex={-1}
         className={cn(
           'absolute inset-0 bg-foreground/30 backdrop-blur-sm transition-opacity duration-200',
           open ? 'opacity-100' : 'opacity-0',
@@ -751,7 +753,7 @@ function Pagination({
       {pages.map((p, i) =>
         p === '…' ? (
           <span
-            key={'e' + i}
+            key={`e${i}`}
             aria-hidden="true"
             className="inline-flex h-9 w-9 items-center justify-center text-muted-foreground text-sm"
           >
