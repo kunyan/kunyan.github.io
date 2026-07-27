@@ -24,8 +24,8 @@ importers:
         specifier: 3.7.3
         version: 3.7.3
       '@iconify-json/lucide':
-        specifier: 1.2.118
-        version: 1.2.118
+        specifier: 1.2.119
+        version: 1.2.119
       '@iconify/react':
         specifier: 6.0.2
         version: 6.0.2(react@19.2.8)
@@ -557,8 +557,8 @@ packages:
     cpu: [x64]
     os: [win32]
 
-  '@iconify-json/lucide@1.2.118':
-    resolution: {integrity: sha512-JBnK4YOq6K/lA0JP//27QxFxJ4120TjvfXAzGZZIGjCcXcRRRFxl1rcV7+IWdcVCe90KXdqVaAwLaLf6G3HELw==}
+  '@iconify-json/lucide@1.2.119':
+    resolution: {integrity: sha512-KbrC7fT5wPshV1KLRM0k91poP0OH4eKEVywEOH0FCczKb+qth8Pcq1Hy9kS2tXeF52s23qzLnG8AJsExPSupeA==}
 
   '@iconify/react@6.0.2':
     resolution: {integrity: sha512-SMmC2sactfpJD427WJEDN6PMyznTFMhByK9yLW0gOTtnjzzbsi/Ke/XqsumsavFPwNiXs8jSiYeZTmLCLwO+Fg==}
@@ -2970,7 +2970,7 @@ snapshots:
   '@esbuild/win32-x64@0.28.1':
     optional: true
 
-  '@iconify-json/lucide@1.2.118':
+  '@iconify-json/lucide@1.2.119':
     dependencies:
       '@iconify/types': 2.0.0
 
