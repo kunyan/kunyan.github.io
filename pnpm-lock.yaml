@@ -24,8 +24,8 @@ importers:
         specifier: 3.7.3
         version: 3.7.3
       '@iconify-json/lucide':
-        specifier: 1.2.123
-        version: 1.2.123
+        specifier: 1.2.124
+        version: 1.2.124
       '@iconify/react':
         specifier: 6.0.2
         version: 6.0.2(react@19.2.8)
@@ -557,8 +557,8 @@ packages:
     cpu: [x64]
     os: [win32]
 
-  '@iconify-json/lucide@1.2.123':
-    resolution: {integrity: sha512-0CozmpKXEOEEhltrfT2zt+/t1hez67Y+hM2VJWoIcBKdBrb83VYuKf+b5A0QU9HfQm+RNn2GjFWlTOwi+Ss6IA==}
+  '@iconify-json/lucide@1.2.124':
+    resolution: {integrity: sha512-mO6JyBVNER7uXEkW2bXiN9Rrm6w91IXxwnNmIMbu2KZX0ZPcVZH1xDUTw94pryxESUIpBhinkOUIZIav+TA9ng==}
 
   '@iconify/react@6.0.2':
     resolution: {integrity: sha512-SMmC2sactfpJD427WJEDN6PMyznTFMhByK9yLW0gOTtnjzzbsi/Ke/XqsumsavFPwNiXs8jSiYeZTmLCLwO+Fg==}
@@ -2870,7 +2870,7 @@ snapshots:
   '@esbuild/win32-x64@0.28.1':
     optional: true
 
-  '@iconify-json/lucide@1.2.123':
+  '@iconify-json/lucide@1.2.124':
     dependencies:
       '@iconify/types': 2.0.0
 
@@ -3052,13 +3052,6 @@ snapshots:
     transitivePeerDependencies:
       - supports-color
 
-  '@napi-rs/wasm-runtime@1.2.1(@emnapi/core@1.11.1)(@emnapi/runtime@1.11.1)':
-    dependencies:
-      '@emnapi/core': 1.11.1
-      '@emnapi/runtime': 1.11.1
-      '@tybys/wasm-util': 0.10.3
-    optional: true
-
   '@napi-rs/wasm-runtime@1.2.1(@emnapi/core@1.11.1)(@emnapi/runtime@1.11.2)':
     dependencies:
       '@emnapi/core': 1.11.1
@@ -3119,7 +3112,7 @@ snapshots:
     dependencies:
       '@emnapi/core': 1.11.1
       '@emnapi/runtime': 1.11.1
-      '@napi-rs/wasm-runtime': 1.2.1(@emnapi/core@1.11.1)(@emnapi/runtime@1.11.1)
+      '@napi-rs/wasm-runtime': 1.2.3(@emnapi/core@1.11.1)(@emnapi/runtime@1.11.1)
     optional: true
 
   '@rolldown/binding-win32-arm64-msvc@1.1.5':
