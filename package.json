@@ -40,7 +40,7 @@
     "tailwindcss": "4.3.3"
   },
   "devDependencies": {
-    "@biomejs/biome": "2.5.9",
+    "@biomejs/biome": "2.5.10",
     "@tailwindcss/typography": "0.5.20",
     "lefthook": "2.1.10"
   }
