@@ -30,7 +30,7 @@
     "@tailwindcss/vite": "4.3.3",
     "@types/react": "19.2.18",
     "@types/react-dom": "19.2.5",
-    "astro": "7.2.6",
+    "astro": "7.2.7",
     "astro-icon": "1.2.0",
     "clsx": "2.1.1",
     "react": "19.2.8",
